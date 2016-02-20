@@ -4,4 +4,5 @@
                  :utopian/config
                  :utopian/db
                  :utopian/app
-                 :utopian/skeleton))
+                 :utopian/skeleton
+                 :utopian/watcher))
