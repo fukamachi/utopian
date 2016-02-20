@@ -2,7 +2,6 @@
   (:use :cl
         :utopian
         :<% @var name %>/config/application)
-  (:import-from :<% @var name %>/controllers/root)
   (:export :*app*))
 (in-package :<% @var name %>/config/routes)
 
@@ -12,4 +11,4 @@
 ;;
 ;; Routing rules
 
-(route :GET "/" #'<% @var name %>/controllers/root:index)
+(route :GET "/" "root:index")

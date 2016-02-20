@@ -42,22 +42,46 @@
 (defun project-path (path)
   (merge-pathnames path (project-root)))
 
+(defun package-system (package)
+  (asdf:find-system
+   (asdf/package-inferred-system::package-name-system (package-name package))))
+
 (defmethod initialize-instance :after ((app base-app) &rest initargs)
   (declare (ignore initargs))
   (unless (and (slot-boundp app 'root)
                (slot-value app 'root))
     (setf (slot-value app 'root)
-          (asdf:component-pathname
-           (asdf:find-system
-            (asdf/package-inferred-system::package-name-system (package-name *package*))))))
+          (asdf:component-pathname (package-system *package*))))
   (djula:add-template-directory
    (merge-pathnames #P"views/" (slot-value app 'root)))
   (setf (gethash *package* *package-app*) app)
   (setf *current-app* app))
 
-(defgeneric connect (app url fn &key method regexp)
-  (:method ((app base-app) url fn &key (method :get) regexp)
-    (setf (ningle:route app url :method method :regexp regexp) fn)))
+(defgeneric connect (app url action &key method regexp)
+  (:method ((app base-app) url action &key (method :get) regexp)
+    (setf (ningle:route app url :method method :regexp regexp)
+          (etypecase action
+            (function action)
+            (string
+             (let ((match
+                       (nth-value 1 (ppcre:scan-to-strings "^([^:]+)::?(.+)$"
+                                                           action))))
+               (unless match
+                 (error "Invalid controller: ~A" action))
+               (let ((package-name
+                       (intern
+                        (string-upcase
+                         (format nil "~A/controllers/~A"
+                                 (ppcre:scan-to-strings "^[^/]+"
+                                                        (asdf:component-name
+                                                         (package-system *package*)))
+                                 (aref match 0)))
+                        :keyword)))
+                 (asdf:load-system (asdf:find-system package-name)
+                                   :verbose nil)
+                 (fdefinition
+                  (intern (string-upcase (aref match 1))
+                          package-name)))))))))
 
 (defun route (method url fn &key regexp)
   (connect (gethash *package* *package-app*) url fn :method method :regexp regexp))
