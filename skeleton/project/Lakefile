@@ -1,5 +1,7 @@
 #|-*- mode:lisp -*-|#
 
+(push (uiop:pathname-directory-pathname *load-pathname*)
+      asdf:*central-registry*)
 (ql:quickload :<% @var name %> :silent t)
 
 (uiop:define-package lake.user

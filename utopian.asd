@@ -1,5 +1,5 @@
 #-asdf3.1 (error "Utopian requires ASDF 3.1")
-(defsystem utopian
+(asdf:defsystem utopian
   :class :package-inferred-system
   :version "0.1"
   :author "Eitaro Fukamachi"
@@ -9,5 +9,5 @@
                :lack
                :mito))
 
-(register-system-packages "utopian/package" '(#:utopian))
-(register-system-packages "lack-component" '(#:lack.component))
+(asdf:register-system-packages "utopian/package" '(#:utopian))
+(asdf:register-system-packages "lack-component" '(#:lack.component))
