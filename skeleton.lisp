@@ -6,7 +6,7 @@
 (in-package #:utopian/skeleton)
 
 (defvar *skeleton-directory*
-  (asdf:system-relative-pathname :utopian #P"skeleton/"))
+  (asdf:system-relative-pathname :utopian #P"skeleton/project/"))
 
 (defun make-project (path &rest params &key description author license &allow-other-keys)
   (declare (ignore description author license))

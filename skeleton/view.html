@@ -1,0 +1,6 @@
+{% extends "layouts/default.html" %}
+{% block title %}<% @var appname %> - <% @var name %>{% endblock %}
+{% block content %}
+<h1><% @var name %>/<% @var action %></h1>
+<p>Find me in views/<% @var name %>/<% @var action %>.html</p>
+{% endblock %}
