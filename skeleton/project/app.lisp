@@ -1,3 +1,5 @@
+(push (uiop:pathname-directory-pathname *load-pathname*)
+      asdf:*central-registry*)
 (ql:quickload :<% @var name %> :silent t)
 
 (defpackage <% @var name %>/app

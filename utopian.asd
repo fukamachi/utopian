@@ -9,5 +9,5 @@
                :lack
                :mito))
 
-(asdf:register-system-packages "utopian/package" '(#:utopian))
+(asdf:register-system-packages "utopian/package" '(#:utopian #:utopian/package))
 (asdf:register-system-packages "lack-component" '(#:lack.component))
