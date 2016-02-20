@@ -10,6 +10,7 @@ Utopian is a web framework for Common Lisp never finished.
 * [Roswell](https://github.com/roswell/roswell)
 * [Qlot](https://github.com/fukamachi/qlot)
 * [Lake](https://github.com/takagi/lake)
+* ASDF 3.1 or above
 * SQLite3
 
 ## Getting started
@@ -55,7 +56,24 @@ $ qlot install
 $ qlot exec lake server
 ```
 
-## Delopyment
+## Generating a new controller
+
+```
+$ utopian generate controller welcome index
+writing controllers/welcome.lisp
+writing views/welcome/index.html
+```
+
+## Generating a new model
+
+```
+$ utopian generate model user name:varchar:20 email:varchar:255
+writing models/user.lisp
+```
+
+Run `qlot exec lake db:generate-migrations` after this for generating a migration file and apply it with `qlot exec lake db:migrate`.
+
+## Deployment
 
 ```
 $ APP_ENV=production clackup app.lisp --server woo --port 8080
