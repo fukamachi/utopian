@@ -5,4 +5,5 @@
                  :utopian/db
                  :utopian/app
                  :utopian/skeleton
-                 :utopian/watcher))
+                 :utopian/watcher
+                 :utopian/tasks))

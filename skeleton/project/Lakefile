@@ -7,23 +7,9 @@
 (uiop:define-package lake.user
   (:mix :cl
         :lake
-        :clack
-        :utopian
-        :mito))
+        :utopian))
 (in-package :lake.user)
 
+(utopian:load-tasks)
+
 (task "default" ("server"))
-
-(task "server" ()
-  (unless (productionp)
-    (utopian:start-watching))
-  (clack:clackup (project-path #P"app.lisp")
-                 :use-thread nil
-                 :debug (productionp)))
-
-(namespace "db"
-  (apply #'mito:connect-toplevel (connection-settings :maindb))
-  (task "migrate" ()
-    (mito:migrate (project-path (format nil "db/~A/" (appenv)))))
-  (task "generate-migrations" ()
-    (mito:generate-migrations (project-path (format nil "db/~A/" (appenv))))))
