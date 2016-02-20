@@ -1,0 +1,25 @@
+#|-*- mode:lisp -*-|#
+
+(ql:quickload :<% @var name %> :silent t)
+
+(uiop:define-package lake.user
+  (:mix :cl
+        :lake
+        :clack
+        :utopian
+        :mito))
+(in-package :lake.user)
+
+(task "default" ("server"))
+
+(task "server" ()
+  (clack:clackup (project-path #P"app.lisp")
+                 :use-thread nil
+                 :debug (productionp)))
+
+(namespace "db"
+  (apply #'mito:connect-toplevel (connection-settings :maindb))
+  (task "migrate" ()
+    (mito:migrate (project-path #P"db/")))
+  (task "generate-migrations" ()
+    (mito:generate-migrations (project-path #P"db/"))))
