@@ -11,7 +11,7 @@
 
 (defclass <% @var name %> ()
   (<%=
-   (format nil "~{~A~^  ~%~}"
+   (format nil "~{~A~^~%   ~}"
            (loop for (name type . type-args) in (getf env :columns)
                  collect (format nil
                                  "(~A :col-type ~:[:~A~*~;(:~A~{ ~A~})~]
