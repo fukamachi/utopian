@@ -115,7 +115,13 @@ Commands:
                    (list :appname appname
                          :name name
                          :action action))
-           out))))))
+           out)))
+      (with-open-file (out (pathname "config/routes.lisp")
+                           :direction :output
+                           :if-exists :append)
+        (format out "~2&(route :GET \"/~A/~A\" \"~A:~A\")~%"
+                name action
+                name action)))))
 
 (defun command-generate (type &rest options)
   (case-equal type
