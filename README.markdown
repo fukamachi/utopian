@@ -5,6 +5,13 @@
 
 Utopian is a web framework for Common Lisp never finished.
 
+## Requirements
+
+* [Roswell](https://github.com/roswell/roswell)
+* [Qlot](https://github.com/fukamachi/qlot)
+* [Lake](https://github.com/takagi/lake)
+* SQLite3
+
 ## Getting started
 
 ### Installation
@@ -44,7 +51,14 @@ writing blog/views/layouts/default.html
 
 ```
 $ cd blog/
-$ lake server
+$ qlot install
+$ qlot exec lake server
+```
+
+## Delopyment
+
+```
+$ APP_ENV=production clackup app.lisp --server woo --port 8080
 ```
 
 ## See Also
