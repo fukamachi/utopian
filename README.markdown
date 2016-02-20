@@ -7,35 +7,44 @@ Utopian is a web framework for Common Lisp never finished.
 
 ## Getting started
 
-```common-lisp
-(ql:quickload :utopian)
+### Installation
+
+```
+$ git clone https://github.com/fukamachi/utopian
+$ ros -l utopian/utopian.asd install utopian
 ```
 
-```common-lisp
-(utopian:make-project #P"blog/")
-;-> writing blog/blog.asd
-;   writing blog/qlfile
-;   writing blog/package.lisp
-;   writing blog/app.lisp
-;   writing blog/README.markdown
-;   writing blog/Lakefile
-;   writing blog/.gitignore
-;   writing blog/config/routes.lisp
-;   writing blog/config/application.lisp
-;   writing blog/config/environments/development.lisp
-;   writing blog/config/environments/production.lisp
-;   writing blog/controllers/root.lisp
-;   writing blog/db/migrations/.keep
-;   writing blog/models/.keep
-;   writing blog/public/stylesheets/style.css
-;   writing blog/views/index.html
-;   writing blog/views/errors/404.html
-;   writing blog/views/layouts/default.html
+Ensure `~/.roswell/bin` is in your shell `$PATH`.
+
+### Creating a new project
+
+```
+$ utopian new blog
+writing blog/blog.asd
+writing blog/qlfile
+writing blog/package.lisp
+writing blog/app.lisp
+writing blog/README.markdown
+writing blog/Lakefile
+writing blog/.gitignore
+writing blog/config/routes.lisp
+writing blog/config/application.lisp
+writing blog/config/environments/development.lisp
+writing blog/config/environments/production.lisp
+writing blog/controllers/root.lisp
+writing blog/db/migrations/.keep
+writing blog/models/.keep
+writing blog/public/stylesheets/style.css
+writing blog/views/index.html
+writing blog/views/errors/404.html
+writing blog/views/layouts/default.html
 ```
 
-```common-lisp
-(ql:quickload :blog)
-(blog:start)
+### Starting a server
+
+```
+$ cd blog/
+$ lake server
 ```
 
 ## See Also
