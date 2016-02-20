@@ -90,19 +90,28 @@ Commands:
       (error "No ASD files found"))
     (let ((destination (pathname (format nil "controllers/~A.lisp" name))))
       (log-writing destination)
-      (with-open-file (out destination :direction :output
-                                       :if-exists :supersede
-                                       :if-does-not-exist :create)
-        (princ
-         (render #P"skeleton/controller.lisp"
-                 (list :name name
-                       :appname appname
-                       :actions
-                       (mapcar (lambda (action)
-                                 (list :name action
-                                       :controller-name name))
-                               actions)))
-         out)))
+      (if (probe-file destination)
+          (with-open-file (out destination :direction :output
+                                           :if-exists :append)
+            (format out
+                    "~{~%~A~}"
+                    (mapcar (lambda (action)
+                              (render #P"skeleton/controller/action.lisp"
+                                      (list :name action
+                                            :controller-name name)))
+                            actions)))
+          (with-open-file (out destination :direction :output
+                                           :if-does-not-exist :create)
+            (princ
+             (render #P"skeleton/controller.lisp"
+                     (list :name name
+                           :appname appname
+                           :actions
+                           (mapcar (lambda (action)
+                                     (list :name action
+                                           :controller-name name))
+                                   actions)))
+             out))))
     (ensure-directories-exist (pathname (format nil "views/~A/" name)))
     (dolist (action actions)
       (let ((destination (pathname (format nil "views/~A/~A.html" name action))))
