@@ -43,20 +43,18 @@ Commands:
                           (list :description (pop options)))
                          ("--license"
                           (list :license (pop options)))
-                         (otherwise (error "Unknown option ~A" option))))))
-    (apply #'utopian:make-project
-           (pathname path)
-           args)
-    (let ((path
-            (uiop:ensure-directory-pathname path)))
-      (format t "~&$ qlot install~%")
-      (uiop:run-program (format nil "cd '~A' && qlot install" path)
-                        :output *standard-output*
-                        :error-output *error-output*)
-      (format t "~&$ npm install~%")
-      (uiop:run-program (format nil "cd '~A' && npm install" path)
-                        :output *standard-output*
-                        :error-output *error-output*))))
+                         (otherwise (error "Unknown option ~A" option)))))
+        (path
+          (uiop:ensure-directory-pathname path)))
+    (apply #'utopian:make-project path args)
+
+    (format t "~&$ qlot install~%")
+    (uiop:run-program (format nil "cd '~A' && qlot install" path)
+                      :output *standard-output*
+                      :error-output *error-output*)
+
+    (format t "~&$ npm install~%")
+    (ros:exec `("npm" "-prefix" ,(namestring path) "install" ,(namestring path)))))
 
 (defun project-name ()
   (let ((asd-files
