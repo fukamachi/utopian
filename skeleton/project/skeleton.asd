@@ -5,6 +5,6 @@
   :author "<% @var author %>"
   :license "<% @var license %>"
   :description "<% @var description %>"
-  :depends-on ("<% @var name %>/package"))
+  :depends-on ("<% @var name %>/boot"))
 
-(asdf:register-system-packages "<% @var name %>/package" '(:<% @var name %>))
+(asdf:register-system-packages "<% @var name %>/boot" '(:<% @var name %>))
