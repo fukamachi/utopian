@@ -8,6 +8,7 @@
                 #:on-exception
                 #:throw-code
                 #:clear-routing-rules
+                #:next-route
                 #:*request*
                 #:*response*
                 #:*session*)
@@ -18,6 +19,7 @@
            #:project-path
            #:connect
            #:route
+           #:next-route
            #:redirect-to
            #:*request*
            #:*response*
