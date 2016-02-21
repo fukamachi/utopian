@@ -53,6 +53,7 @@ writing blog/views/layouts/default.html
 ```
 $ cd blog/
 $ qlot install
+$ npm install
 $ qlot exec lake server
 ```
 

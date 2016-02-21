@@ -8,5 +8,11 @@
 .#*
 
 quicklisp/
-db/default.db
-error.log
+bundle-libs/
+db/development.db
+log/
+
+node_modules/
+
+public/assets/app.css
+public/assets/bundle.js

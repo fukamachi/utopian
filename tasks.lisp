@@ -7,19 +7,31 @@
         #:utopian/app
         #:utopian/watcher
         #:utopian/config
-        #:utopian/db)
+        #:utopian/db
+        #:uiop)
   (:export #:load-tasks))
 (in-package #:utopian/tasks)
+
+(defun run-gulp-watch ()
+  (uiop/run-program::%process-info-pid
+   (uiop/run-program::%run-program '("node_modules/.bin/gulp" "watch")
+                                   :output *standard-output*
+                                   :error-output *error-output*
+                                   :wait nil)))
 
 (defun load-tasks ()
   (task "default" ("server"))
 
   (task "server" ()
-    (unless (productionp)
-      (utopian/watcher:start-watching))
-    (clack:clackup (project-path #P"app.lisp")
-                   :use-thread nil
-                   :debug (productionp)))
+    (let (pid)
+      (unless (productionp)
+        (utopian/watcher:start-watching)
+        (setf pid (run-gulp-watch)))
+      (clack:clackup (project-path #P"app.lisp")
+                     :use-thread nil
+                     :debug (productionp))
+      (when pid
+        (uiop:run-program `("kill" ,(write-to-string pid))))))
 
   (namespace "db"
     (apply #'mito:connect-toplevel (connection-settings :maindb))
