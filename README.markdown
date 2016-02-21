@@ -10,7 +10,7 @@ Utopian is a web framework for Common Lisp never finished.
 * [Roswell](https://github.com/roswell/roswell)
 * [Qlot](https://github.com/fukamachi/qlot)
 * [Lake](https://github.com/takagi/lake)
-* ASDF 3.1 or above
+* Node.js & npm
 * SQLite3
 
 ## Getting started
@@ -31,29 +31,35 @@ $ utopian new blog
 writing blog/blog.asd
 writing blog/qlfile
 writing blog/package.lisp
+writing blog/package.json
+writing blog/gulpfile.js
 writing blog/app.lisp
 writing blog/README.markdown
 writing blog/Lakefile
 writing blog/.gitignore
+writing blog/.babelrc
+writing blog/assets/javascripts/app.js
+writing blog/assets/stylesheets/app.less
+writing blog/config/webpack.config.js
 writing blog/config/routes.lisp
+writing blog/config/assets.js
 writing blog/config/application.lisp
 writing blog/config/environments/development.lisp
 writing blog/config/environments/production.lisp
 writing blog/controllers/root.lisp
-writing blog/db/migrations/.keep
+writing blog/db/development/migrations/.keep
+writing blog/db/production/migrations/.keep
+writing blog/log/.keep
 writing blog/models/.keep
-writing blog/public/stylesheets/style.css
-writing blog/views/index.html
+writing blog/views/index.html.dj
 writing blog/views/errors/404.html
-writing blog/views/layouts/default.html
+writing blog/views/layouts/default.html.dj
 ```
 
 ### Starting a server
 
 ```
 $ cd blog/
-$ qlot install
-$ npm install
 $ qlot exec lake server
 ```
 
@@ -63,6 +69,7 @@ $ qlot exec lake server
 $ utopian generate controller welcome index
 writing controllers/welcome.lisp
 writing views/welcome/index.html
+writing assets/stylesheets/welcome/index.less
 ```
 
 ## Generating a new model
