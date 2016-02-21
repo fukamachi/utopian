@@ -29,7 +29,7 @@
         (setf pid (run-gulp-watch)))
       (clack:clackup (project-path #P"app.lisp")
                      :use-thread nil
-                     :debug (productionp))
+                     :debug (not (productionp)))
       (when pid
         (uiop:run-program `("kill" ,(write-to-string pid))))))
 
