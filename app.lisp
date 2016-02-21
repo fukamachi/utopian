@@ -81,8 +81,9 @@
                                    :verbose nil)
                  (let ((fn (intern (string-upcase (aref match 1))
                                    package-name)))
-                   (lambda (&rest args)
-                     (apply (fdefinition fn) args))))))))))
+                   (lambda (&rest params)
+                     (apply (fdefinition fn)
+                            (caveman2.nested-parameter:parse-parameters params)))))))))))
 
 (defun route (method url fn &key regexp)
   (connect (gethash *package* *package-app*) url fn :method method :regexp regexp))
