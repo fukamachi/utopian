@@ -5,7 +5,7 @@
   <title>{% block title %}{% endblock %}</title>
   <link rel="stylesheet" type="text/css" media="screen" href="/public/assets/app.css">
   <script type="text/javascript" src="/public/assets/bundle.js"></script>
-  <meta content="{% csrf-token %}" name="csrf-token" />
+  <meta content="{% csrf-token %}" name="csrf-token">
 </head>
 <body>
   {% block content %}{% endblock %}
