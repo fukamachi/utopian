@@ -79,9 +79,10 @@
                         :keyword)))
                  (asdf:load-system (asdf:find-system package-name)
                                    :verbose nil)
-                 (fdefinition
-                  (intern (string-upcase (aref match 1))
-                          package-name)))))))))
+                 (let ((fn (intern (string-upcase (aref match 1))
+                                   package-name)))
+                   (lambda (&rest args)
+                     (apply (fdefinition fn) args))))))))))
 
 (defun route (method url fn &key regexp)
   (connect (gethash *package* *package-app*) url fn :method method :regexp regexp))
