@@ -10,7 +10,8 @@
 quicklisp/
 bundle-libs/
 db/development.db
-log/
+log/*
+!log/.keep
 
 node_modules/
 
