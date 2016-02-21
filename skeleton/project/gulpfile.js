@@ -24,7 +24,7 @@ gulp.task('build-js', function() {
 });
 
 // Watch all LESS files, then run build-less
-gulp.task('watch', function() {
+gulp.task('watch', ['build-less', 'build-js'], function() {
   gulp.watch(config.watch.javascripts, ['build-js']);
   gulp.watch(config.watch.stylesheets.less, ['build-less']);
 });
