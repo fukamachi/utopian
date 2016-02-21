@@ -1,9 +1,17 @@
 # Utopian
 
+[![Quicklisp dist](http://quickdocs.org/badge/utopian.svg)](http://quickdocs.org/utopian/)
+
 > The caveman in offering the first garland to his maiden thereby transcended the brute. He became a utopian in thus rising above the crude necessities of nature. He entered the realm of art when he perceived the subtle use of the useless.
 > -- Okakura Tenshin, "The Book of Tea"
 
-Utopian is a web framework for Common Lisp never finished.
+3 steps to write a better web application:
+
+1. Choose the right language.
+2. Choose the right web framework.
+3. Write less.
+
+Utopian is a web application framework for encouraging rapid web development.
 
 ## Requirements
 
