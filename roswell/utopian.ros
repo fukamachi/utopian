@@ -124,13 +124,13 @@ Commands:
              out))))
     (ensure-directories-exist (pathname (format nil "views/~A/" name)))
     (dolist (action actions)
-      (let ((destination (pathname (format nil "views/~A/~A.html" name action))))
+      (let ((destination (pathname (format nil "views/~A/~A.html.dj" name action))))
         (log-writing destination)
         (with-open-file (out destination :direction :output
                                          :if-exists :supersede
                                          :if-does-not-exist :create)
           (princ
-           (render #P"skeleton/view.html"
+           (render #P"skeleton/view.html.dj"
                    (list :appname appname
                          :name name
                          :action action))

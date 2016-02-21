@@ -1,4 +1,4 @@
-{% extends "layouts/default.html" %}
+{% extends "layouts/default.html.dj" %}
 {% block title %}Welcome to Utopian{% endblock %}
 {% block content %}
 <div id="main">
