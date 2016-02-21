@@ -2,6 +2,7 @@
   (:use :cl
         :utopian)
   (:import-from :clack)
+  (:import-from :clack-errors)
   (:use-reexport :<% @var name %>/config/application
                  :<% @var name %>/config/routes)
   (:export :start
