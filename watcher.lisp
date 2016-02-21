@@ -30,6 +30,7 @@
 (defun on-update (file)
   (handler-case
       (let ((*load-verbose* nil))
+        (format *error-output* "~&Loading '~A'..." file)
         (load file))
     (error (e)
       (format *error-output*
@@ -42,7 +43,8 @@
   (dolist (file (project-files-to-watch))
     (when (< (gethash file *files-modified* 0)
              (file-write-date file))
-      (on-update file))))
+      (on-update file)
+      (setf (gethash file *files-modified*) (file-write-date file)))))
 
 (defun start-watching ()
   #+thread-support
