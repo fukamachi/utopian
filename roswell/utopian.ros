@@ -60,7 +60,7 @@ Commands:
 
 (defun project-name ()
   (let ((asd-files
-          (uiop:directory-files *default-pathname-defaults* "*.asd")))
+          (uiop:directory-files (uiop:getcwd) "*.asd")))
     (first
      (sort
       (mapcar #'pathname-name asd-files)
@@ -140,7 +140,21 @@ Commands:
                            :if-exists :append)
         (format out "~2&(route :GET \"/~A/~A\" \"~A:~A\")~%"
                 name action
-                name action)))))
+                name action))
+      (let ((destination (pathname (format nil "assets/stylesheets/~A/~A.less" name action))))
+        (ensure-directories-exist destination)
+        (log-writing destination)
+        (with-open-file (out destination :direction :output
+                                         :if-exists :supersede
+                                         :if-does-not-exist :create)
+          (princ
+           (render #P"skeleton/asset.less"
+                   (list :name name :action action))
+           out)))
+      (with-open-file (out (pathname "assets/stylesheets/app.less")
+                           :direction :output
+                           :if-exists :append)
+        (format out "~&@import \"~A/~A.less\";~%" name action)))))
 
 (defun command-generate (type &rest options)
   (case-equal type
