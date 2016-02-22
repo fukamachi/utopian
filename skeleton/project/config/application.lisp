@@ -10,4 +10,4 @@
 ;; Error pages
 
 (defmethod on-exception ((app application) (code (eql 404)))
-  (render #P"errors/404.html"))
+  (render nil :template #P"errors/404.html"))
