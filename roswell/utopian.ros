@@ -133,12 +133,6 @@ Commands:
                          :name name
                          :action action))
            out)))
-      (with-open-file (out (pathname "config/routes.lisp")
-                           :direction :output
-                           :if-exists :append)
-        (format out "~2&(route :GET \"/~A/~A\" \"~A:~A\")~%"
-                name action
-                name action))
       (let ((destination (pathname (format nil "assets/stylesheets/~A/~A.less" name action))))
         (ensure-directories-exist destination)
         (log-writing destination)

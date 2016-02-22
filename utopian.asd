@@ -11,4 +11,5 @@
                :bordeaux-threads))
 
 (asdf:register-system-packages "lack-component" '(#:lack.component))
+(asdf:register-system-packages "lack-request" '(#:lack.request))
 (asdf:register-system-packages "lack-middleware-csrf" '(#:lack.middleware.csrf))
