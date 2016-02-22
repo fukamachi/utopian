@@ -6,4 +6,4 @@
 
 (defun index (params)
   (declare (ignore params))
-  (render :index))
+  (render nil :template :index))
