@@ -24,12 +24,15 @@
            #:*request*
            #:*response*
            #:*session*
+           #:*action*
 
            ;; From Caveman2
            #:on-exception
            #:throw-code
            #:clear-routing-rules))
 (in-package #:utopian/app)
+
+(defparameter *action* nil)
 
 (defvar *package-app* (make-hash-table :test 'eq))
 (defvar *current-app*)
@@ -84,8 +87,9 @@
                  (let ((fn (intern (string-upcase (aref match 1))
                                    package-name)))
                    (lambda (&rest params)
-                     (apply (fdefinition fn)
-                            (caveman2.nested-parameter:parse-parameters params)))))))))))
+                     (let ((*action* fn))
+                       (apply (fdefinition fn)
+                              (caveman2.nested-parameter:parse-parameters params))))))))))))
 
 (defun route (method url fn &key regexp)
   (connect (gethash *package* *package-app*) url fn :method method :regexp regexp))
