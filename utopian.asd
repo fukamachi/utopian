@@ -13,3 +13,5 @@
 (asdf:register-system-packages "lack-component" '(#:lack.component))
 (asdf:register-system-packages "lack-request" '(#:lack.request))
 (asdf:register-system-packages "lack-middleware-csrf" '(#:lack.middleware.csrf))
+(asdf:register-system-packages "cl-annot" '(#:cl-annot #:cl-annot.util))
+(asdf:register-system-packages "ningle" '(#:ningle #:ningle.app))

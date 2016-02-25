@@ -4,7 +4,8 @@
   (:export :application))
 (in-package :<% @var name %>/config/application)
 
-(defclass application (utopian:base-app) ())
+(defclass application (base-app) ())
+
 
 ;;
 ;; Error pages

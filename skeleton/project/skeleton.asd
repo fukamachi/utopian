@@ -5,6 +5,7 @@
   :author "<% @var author %>"
   :license "<% @var license %>"
   :description "<% @var description %>"
-  :depends-on ("<% @var name %>/boot"))
+  :depends-on ("<% @var name %>/boot"
+               :cl-syntax-annot))
 
 (asdf:register-system-packages "<% @var name %>/boot" '(:<% @var name %>))

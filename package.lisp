@@ -6,4 +6,11 @@
                  :utopian/app
                  :utopian/skeleton
                  :utopian/watcher
-                 :utopian/tasks))
+                 :utopian/tasks)
+  (:import-from :utopian/controller
+                :controller
+                :route
+                :*action*)
+  (:export :controller
+           :route
+           :*action*))
