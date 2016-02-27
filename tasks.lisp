@@ -36,6 +36,8 @@
   (namespace "db"
     (apply #'mito:connect-toplevel (connection-settings :maindb))
     (task "migrate" ()
+      (mapc #'load (uiop:directory-files (project-path "models/") "*.lisp"))
       (mito:migrate (project-path "db/")))
     (task "generate-migrations" ()
+      (mapc #'load (uiop:directory-files (project-path "models/") "*.lisp"))
       (mito:generate-migrations (project-path "db/")))))
