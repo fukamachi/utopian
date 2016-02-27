@@ -10,7 +10,9 @@
   (:import-from :utopian/controller
                 :controller
                 :route
-                :*action*)
+                :*action*
+                :clear-routing-rules)
   (:export :controller
            :route
-           :*action*))
+           :*action*
+           :clear-routing-rules))

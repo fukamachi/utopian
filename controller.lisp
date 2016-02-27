@@ -16,7 +16,8 @@
            #:find-controller
            #:find-controller-package
            #:route
-           #:*action*))
+           #:*action*
+           #:clear-routing-rules))
 (in-package #:utopian/controller)
 
 (defvar *action*)
@@ -25,16 +26,9 @@
 
 (defvar *package-controller* (make-hash-table :test 'eq))
 
-(defmethod initialize-instance :around ((controller controller) &rest initargs)
+(defmethod initialize-instance :after ((controller controller) &rest initargs)
   (declare (ignore initargs))
-  (let ((instance (gethash *package* *package-controller*)))
-    (if instance
-        (progn
-          (clear-routing-rules instance)
-          instance)
-        (let ((instance (call-next-method)))
-          (setf (gethash *package* *package-controller*) instance)
-          instance))))
+  (setf (gethash *package* *package-controller*) controller))
 
 (defun find-controller-package (app-name name)
   (let* ((package-name (format nil "~(~A~)/controllers/~(~A~)"

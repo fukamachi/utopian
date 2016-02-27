@@ -5,7 +5,8 @@
   (:export :*app*))
 (in-package :<% @var name %>/config/routes)
 
-(defparameter *app* (make-instance 'application))
+(defvar *app* (make-instance 'application))
+(clear-routing-rules *app*)
 
 ;;
 ;; Routing rules

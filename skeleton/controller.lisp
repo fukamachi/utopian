@@ -8,7 +8,8 @@
 (syntax:use-syntax :annot)
 
 (defclass <% @var name %> (controller) ())
-(defparameter *<% @var name %>* (make-instance '<% @var name %>))
+(defvar *<% @var name %>* (make-instance '<% @var name %>))
+(clear-routing-rules *<% @var name %>*)
 
 <%- @loop actions %>
 <% @include controller/action.lisp %>
