@@ -66,7 +66,7 @@
           (unless (and (eq status :external)
                        (fboundp controller))
             (error "Controller is not defined or internal"))
-          (setf fn (symbol-function controller))))))
+          (setf fn controller)))))
   (let ((controller (find-current-controller)))
     (setf (ningle:route controller url :method method :regexp regexp :identifier identifier)
           (lambda (params)
