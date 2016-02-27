@@ -48,6 +48,8 @@
   (let ((template (if template
                       (djula:compile-template* (find-djula-template template))
                       (find-default-action-template))))
+    (unless template
+      (error "Unknown template: ~A for ~S" template *action*))
     (apply #'djula:render-template* template nil env)))
 
 (defun render-json (object)
