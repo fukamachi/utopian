@@ -6,8 +6,6 @@
   (:use :cl
         :<% @var name %>
         :utopian)
-  (:import-from :clack-errors
-                :*clack-error-middleware*)
   (:import-from :lack
                 :builder)
   (:import-from :mito))
@@ -21,7 +19,7 @@
   :root (project-path #P"public/"))
  :accesslog
  (unless (productionp)
-   *clack-error-middleware*)
+   :clack-errors)
  (when (config :error-log)
    `(:backtrace :output ,(config :error-log)))
  :session
