@@ -58,3 +58,7 @@
 (djula::def-tag-compiler csrf-token ()
   (lambda (stream)
     (princ (lack.middleware.csrf:csrf-token *session*) stream)))
+
+(djula::def-tag-compiler csrf-html-tag ()
+  (lambda (stream)
+    (princ (lack.middleware.csrf:csrf-html-tag *session*) stream)))
