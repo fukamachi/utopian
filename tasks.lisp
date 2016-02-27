@@ -36,6 +36,6 @@
   (namespace "db"
     (apply #'mito:connect-toplevel (connection-settings :maindb))
     (task "migrate" ()
-      (mito:migrate (project-path (format nil "db/~A/" (appenv)))))
+      (mito:migrate (project-path "db/")))
     (task "generate-migrations" ()
-      (mito:generate-migrations (project-path (format nil "db/~A/" (appenv)))))))
+      (mito:generate-migrations (project-path "db/")))))
