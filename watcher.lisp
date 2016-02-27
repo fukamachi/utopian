@@ -29,8 +29,11 @@
 
 (defun on-update (file)
   (handler-case
-      (let ((*load-verbose* nil))
-        (format *error-output* "~&Loading '~A'..." file)
+      (let ((*load-verbose* t)
+            (*package* *package*)
+            (*readtable* *readtable*)
+            (*load-pathname* file)
+            (*load-truename* file))
         (load file))
     (error (e)
       (format *error-output*
