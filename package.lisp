@@ -4,15 +4,7 @@
                  :utopian/config
                  :utopian/db
                  :utopian/app
+                 :utopian/controller
                  :utopian/skeleton
                  :utopian/watcher
-                 :utopian/tasks)
-  (:import-from :utopian/controller
-                :controller
-                :route
-                :*action*
-                :clear-routing-rules)
-  (:export :controller
-           :route
-           :*action*
-           :clear-routing-rules))
+                 :utopian/tasks))

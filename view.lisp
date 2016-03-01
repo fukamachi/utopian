@@ -2,9 +2,8 @@
 (defpackage utopian/view
   (:use #:cl)
   (:import-from #:utopian/app
+                #:*action*
                 #:*session*)
-  (:import-from #:utopian/controller
-                #:*action*)
   (:import-from #:lack.middleware.csrf)
   (:import-from #:jonathan)
   (:import-from #:djula

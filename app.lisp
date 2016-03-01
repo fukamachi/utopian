@@ -1,18 +1,16 @@
 (in-package #:cl-user)
 (defpackage utopian/app
   (:use #:cl)
-  (:import-from #:utopian/controller
-                #:controller
-                #:find-controller
-                #:find-controller-package
-                #:%route)
   (:import-from #:caveman2
+                #:<app>
                 #:*request*
                 #:*response*
                 #:*session*
                 #:throw-code
                 #:on-exception
-                #:redirect)
+                #:redirect
+                #:clear-routing-rules)
+  (:import-from #:ningle)
   (:import-from #:myway
                 #:make-mapper
                 #:next-route
@@ -20,21 +18,28 @@
   (:import-from #:lack.component
                 #:call)
   (:import-from #:lack.request
-                #:request-path-info
-                #:request-method
-                #:request-env)
+                #:request-path-info)
+  (:import-from #:cl-annot
+                #:defannotation)
+  (:import-from #:cl-annot.util
+                #:definition-form-type
+                #:definition-form-symbol
+                #:progn-form-last)
   (:import-from #:djula
                 #:add-template-directory)
   (:export #:base-app
            #:project-root
            #:project-path
+           #:route
            #:mount
            #:redirect-to
+           #:*action*
 
            ;; from MyWay
            #:next-route
 
            ;; from Caveman2
+           #:clear-routing-rules
            #:*request*
            #:*response*
            #:*session*
@@ -49,7 +54,7 @@
   (asdf:find-system
    (asdf/package-inferred-system::package-name-system (package-name package))))
 
-(defclass base-app (controller)
+(defclass base-app (<app>)
   ((root :initarg :root
          :initform (asdf:component-pathname (package-system *package*))
          :accessor app-root)
@@ -59,31 +64,6 @@
                                            (asdf:component-name
                                             (package-system *package*))))
          :accessor app-name)))
-
-(defparameter *default-mapper*
-  (myway:make-mapper))
-
-(myway:connect *default-mapper* "/:controller/?:action?"
-               (lambda (url-params)
-                 (let ((controller (find-controller (app-name *current-app*)
-                                                    (getf url-params :controller))))
-                   (if controller
-                       (let ((env (lack.request:request-env *request*)))
-                         (setf (getf env :path-info) (format nil "/~A"
-                                                             (or (getf url-params :action) "")))
-                         (call controller env))
-                       (throw-code 404))))
-               :method :any)
-
-(defmethod ningle:not-found ((app base-app))
-  (multiple-value-bind (res foundp)
-      (myway:dispatch *default-mapper*
-                      (request-path-info *request*)
-                      :method
-                      (request-method *request*))
-    (if foundp
-        res
-        (call-next-method))))
 
 (defun project-root ()
   (app-root *current-app*))
@@ -98,6 +78,59 @@
   (setf (gethash *package* *package-app*) app)
   (setf *current-app* app))
 
+(defun find-controller-package (app-name name)
+  (let* ((package-name (format nil "~(~A~)/controllers/~(~A~)"
+                               app-name
+                               name))
+         (controller (asdf:find-system package-name nil)))
+    (when controller
+      (asdf:load-system controller)
+      (find-package (string-upcase package-name)))))
+
+(defvar *action*)
+
+(defun %route (method url fn &key regexp identifier)
+  (when (stringp fn)
+    (destructuring-bind (controller action)
+        (ppcre:split "::?" fn)
+      (let ((package (find-controller-package (ppcre:scan-to-strings "^[^/]+" (package-name *package*))
+                                              controller)))
+        (unless package
+          (error "Unknown package: ~A" controller))
+        (multiple-value-bind (controller status)
+            (intern (string-upcase action) package)
+          (unless (fboundp controller)
+            (error "Controller is not defined: ~S" controller))
+          (unless (eq status :external)
+            (warn "Controller is an internal function: ~S" controller))
+          (setf fn controller)))))
+  (setf (ningle:route *current-app* url :method method :regexp regexp :identifier identifier)
+        (lambda (params)
+          (let ((*action* identifier))
+            (funcall fn params)))))
+
+(defun canonicalize-method (method)
+  (etypecase method
+    (list (mapcar #'canonicalize-method method))
+    (keyword method)
+    (symbol (intern (symbol-name method) :keyword))))
+
+(defannotation route (method routing-rule form)
+    (:arity 3)
+  (let* ((last-form (progn-form-last form))
+         (type (definition-form-type last-form))
+         (symbol (definition-form-symbol last-form))
+         (method (canonicalize-method method)))
+    (case type
+      (cl:lambda
+          `(%route ',method ,routing-rule ,form))
+      (cl:defun
+          `(progn
+             (%route ',method ,routing-rule ,form :identifier ',symbol)
+             ',symbol))
+      ('nil
+       `(%route ,method ,routing-rule ,form)))))
+
 (defun mount (mount-path controller)
   (check-type controller string)
   ;; Ensure the mount-path ends with "/".
@@ -105,7 +138,7 @@
         (ppcre:regex-replace "/?$" mount-path "/"))
   (let ((package (find-controller-package (app-name *current-app*) controller)))
     (unless package
-      (error "Unknown (or internal) controller: ~A" controller))
+      (error "Unknown controller: ~A" controller))
 
     (%route :any (format nil "~A*" mount-path)
             (lambda (params)
