@@ -103,7 +103,8 @@
             (error "Controller is not defined: ~S" controller))
           (unless (eq status :external)
             (warn "Controller is an internal function: ~S" controller))
-          (setf fn controller)))))
+          (setf fn controller
+                identifier controller)))))
   (setf (ningle:route *current-app* url :method method :regexp regexp :identifier identifier)
         (lambda (params)
           (let ((*action* identifier))

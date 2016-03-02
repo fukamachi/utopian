@@ -28,6 +28,7 @@
       (djula:find-template djula:*current-store* (format nil "~A.html" path) nil)))
 
 (defun find-default-action-template (&optional (action *action*))
+  (assert action)
   (flet ((action-controller (action)
            (let ((match
                      (nth-value 1
