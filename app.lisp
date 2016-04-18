@@ -108,7 +108,7 @@
   (setf (ningle:route *current-app* url :method method :regexp regexp :identifier identifier)
         (lambda (params)
           (let ((*action* identifier))
-            (funcall fn params)))))
+            (funcall fn (caveman2.nested-parameter:parse-parameters params))))))
 
 (defun canonicalize-method (method)
   (etypecase method
