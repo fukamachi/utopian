@@ -19,6 +19,18 @@
                                    :error-output *error-output*
                                    :wait nil)))
 
+(defun connect-to-db ()
+  (apply #'mito:connect-toplevel (connection-settings :maindb)))
+
+(defun load-models ()
+  (mapc #'load (uiop:directory-files (project-path "models/") "*.lisp")))
+
+(defun task-migrate ()
+  (mito:migrate (project-path "db/")))
+
+(defun task-generate-migrations ()
+  (mito:generate-migrations (project-path "db/")))
+
 (defun load-tasks ()
   (task "default" ("server"))
 
@@ -34,10 +46,28 @@
         (uiop:run-program `("kill" ,(write-to-string pid))))))
 
   (namespace "db"
-    (apply #'mito:connect-toplevel (connection-settings :maindb))
     (task "migrate" ()
-      (mapc #'load (uiop:directory-files (project-path "models/") "*.lisp"))
-      (mito:migrate (project-path "db/")))
+      (connect-to-db)
+      (load-models)
+      (task-migrate))
     (task "generate-migrations" ()
-      (mapc #'load (uiop:directory-files (project-path "models/") "*.lisp"))
-      (mito:generate-migrations (project-path "db/")))))
+      (connect-to-db)
+      (load-models)
+      (task-generate-migrations))
+    (task "recreate" ()
+      (apply #'mito:connect-toplevel
+             (car (connection-settings :maindb))
+             :database-name "postgres"
+             (alexandria:remove-from-plist
+              (cdr (connection-settings :maindb))
+              :database-name))
+      (let ((dbname (getf (cdr (connection-settings :maindb)) :database-name)))
+        (mito:execute-sql
+         (format nil "DROP DATABASE \"~A\"" dbname))
+        (mito:execute-sql
+         (format nil "CREATE DATABASE \"~A\"" dbname)))
+      (mapc #'delete-file (uiop:directory-files (project-path #P"db/migrations/")))
+      (connect-to-db)
+      (load-models)
+      (task-generate-migrations)
+      (task-migrate))))
