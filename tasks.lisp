@@ -54,6 +54,13 @@
       (connect-to-db)
       (load-models)
       (task-generate-migrations))
+    (task "seed" ()
+      (connect-to-db)
+      (let ((seeds (project-path #P"db/seeds.lisp")))
+        (unless (probe-file seeds)
+          (error "'db/seeds.lisp' doesn't exist."))
+        (mito.logger:with-sql-logging
+          (load seeds))))
     (task "recreate" ()
       (apply #'mito:connect-toplevel
              (car (connection-settings :maindb))
