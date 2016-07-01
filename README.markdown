@@ -26,8 +26,8 @@ Utopian is a web application framework for encouraging rapid web development.
 ### Installation
 
 ```
-$ git clone https://github.com/fukamachi/utopian
-$ ros -l utopian/utopian.asd install utopian
+# Use Roswell v0.0.6.63 or later
+$ ros install fukamachi/utopian
 ```
 
 Ensure `~/.roswell/bin` is in your shell `$PATH`.
