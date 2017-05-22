@@ -30,6 +30,7 @@
   (:export #:base-app
            #:project-root
            #:project-path
+           #:project-name
            #:route
            #:mount
            #:redirect-to
@@ -64,6 +65,9 @@
                                            (asdf:component-name
                                             (package-system *package*))))
          :accessor app-name)))
+
+(defun project-name ()
+  (app-name *current-app*))
 
 (defun project-root ()
   (app-root *current-app*))

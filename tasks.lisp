@@ -23,7 +23,12 @@
   (apply #'mito:connect-toplevel (connection-settings :maindb)))
 
 (defun load-models ()
-  (mapc #'load (uiop:directory-files (project-path "models/") "*.lisp")))
+  (dolist (model-file (uiop:directory-files (project-path "models/") "*.lisp"))
+    (funcall #+quicklisp #'ql:quickload
+             #-quicklisp #'asdf:load-system
+             (format nil "~A/models/~A"
+                     (project-name)
+                     (pathname-name model-file)))))
 
 (defun task-migrate ()
   (mito:migrate (project-path "db/")))
