@@ -16,12 +16,23 @@
   (apply #'mito:connect-toplevel (connection-settings :maindb)))
 
 (defun load-models ()
-  (dolist (model-file (uiop:directory-files (project-path "models/") "*.lisp"))
-    (funcall #+quicklisp #'ql:quickload
-             #-quicklisp #'asdf:load-system
-             (format nil "~A/models/~A"
-                     (project-name)
-                     (pathname-name model-file)))))
+  (let ((root-models-path (project-path "models/")))
+    (labels ((directory-models (dir)
+               (append
+                (uiop:directory-files dir "*.lisp")
+                (mapcan #'directory-models (uiop:subdirectories dir))))
+             (model-name (file)
+               (format nil
+                       "~A/models~{/~A~}/~A"
+                       (project-name)
+                       (subseq (pathname-directory file)
+                               (length (pathname-directory root-models-path)))
+                       (pathname-name file))))
+      (dolist (model-file (directory-models root-models-path))
+        #+quicklisp
+        (ql:quickload (model-name model-file) :silent t)
+        #-quicklisp
+        (asdf:load-system (model-name model-file))))))
 
 (defun task-migrate ()
   (mito:migrate (project-path "db/")))
