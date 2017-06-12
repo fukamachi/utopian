@@ -52,8 +52,10 @@
       (error "Unknown template: ~A for ~S" template *action*))
     (apply #'djula:render-template* template nil env)))
 
-(defun render-json (object)
-  (jojo:to-json object))
+(defun render-json (object &key from octets)
+  (let ((jojo:*from* (or jojo:*from*
+                         :alist)))
+    (jojo:to-json object :from from :octets octets)))
 
 (djula::def-tag-compiler csrf-token ()
   (lambda (stream)
