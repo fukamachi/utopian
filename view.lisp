@@ -3,7 +3,10 @@
   (:use #:cl)
   (:import-from #:utopian/app
                 #:*action*
-                #:*session*)
+                #:*session*
+                #:*response*)
+  (:import-from #:lack.response
+                #:response-headers)
   (:import-from #:lack.middleware.csrf)
   (:import-from #:jonathan)
   (:import-from #:djula
@@ -53,6 +56,7 @@
     (apply #'djula:render-template* template nil env)))
 
 (defun render-json (object &key from octets)
+  (setf (getf (response-headers *response*) :content-type) "application/json")
   (let ((jojo:*from* (or jojo:*from*
                          :alist)))
     (jojo:to-json object :from from :octets octets)))
