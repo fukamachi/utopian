@@ -1,18 +1,17 @@
-#-asdf3.1 (error "Utopian requires ASDF 3.1")
-(asdf:defsystem utopian
+(defsystem "utopian"
   :class :package-inferred-system
   :version "0.1"
   :author "Eitaro Fukamachi"
   :license "LLGPL"
   :description "Full stack web application framework"
   :depends-on ("utopian/package"
-               :lack
-               :mito
-               :bordeaux-threads))
+               "lack"
+               "mito"
+               "bordeaux-threads"))
 
-(asdf:register-system-packages "lack-component" '(#:lack.component))
-(asdf:register-system-packages "lack-request" '(#:lack.request))
-(asdf:register-system-packages "lack-response" '(#:lack.response))
-(asdf:register-system-packages "lack-middleware-csrf" '(#:lack.middleware.csrf))
-(asdf:register-system-packages "cl-annot" '(#:cl-annot #:cl-annot.util))
-(asdf:register-system-packages "ningle" '(#:ningle #:ningle.app))
+(register-system-packages "lack-component" '(#:lack.component))
+(register-system-packages "lack-request" '(#:lack.request))
+(register-system-packages "lack-response" '(#:lack.response))
+(register-system-packages "lack-middleware-csrf" '(#:lack.middleware.csrf))
+(register-system-packages "cl-annot" '(#:cl-annot #:cl-annot.util))
+(register-system-packages "ningle" '(#:ningle #:ningle.app))
