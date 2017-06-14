@@ -4,12 +4,14 @@
                 #:scan-to-strings)
   (:export #:package-system
            #:*project-root*
+           #:*project-name*
            #:project-root
            #:project-path
            #:project-name))
 (in-package #:utopian/project)
 
 (defvar *project-root* nil)
+(defvar *project-name* nil)
 
 (defun package-system (package)
   (asdf:find-system
@@ -28,4 +30,5 @@
   (merge-pathnames path (project-root)))
 
 (defun project-name ()
-  (package-root-name *package*))
+  (or *project-name*
+      (package-root-name *package*)))
