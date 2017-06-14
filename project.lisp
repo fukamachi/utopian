@@ -15,11 +15,10 @@
 (defun package-root-name (package)
   (string-downcase
    (ppcre:scan-to-strings "^[^/]+"
-                          (asdf:component-name
-                           (package-system package)))))
+                          (package-name package))))
 
 (defun project-root ()
-  (asdf:component-pathname (package-system *package*)))
+  (asdf:component-pathname (asdf:find-system (project-name) t)))
 
 (defun project-path (path)
   (merge-pathnames path (project-root)))
