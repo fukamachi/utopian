@@ -3,7 +3,8 @@
   (:use #:cl)
   (:import-from #:utopian/project
                 #:package-system
-                #:project-name)
+                #:project-name
+                #:*project-root*)
   (:import-from #:caveman2
                 #:<app>
                 #:*request*
@@ -69,7 +70,8 @@
   (declare (ignore initargs))
   (djula:add-template-directory
    (merge-pathnames #P"views/" (app-root app)))
-  (setf (gethash *package* *package-app*) app))
+  (setf (gethash *package* *package-app*) app)
+  (setf *project-root* (app-root app)))
 
 (defun find-controller-package (app-name name)
   (let* ((package-name (format nil "~(~A~)/controllers/~(~A~)"

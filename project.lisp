@@ -3,10 +3,13 @@
   (:import-from #:cl-ppcre
                 #:scan-to-strings)
   (:export #:package-system
+           #:*project-root*
            #:project-root
            #:project-path
            #:project-name))
 (in-package #:utopian/project)
+
+(defvar *project-root* nil)
 
 (defun package-system (package)
   (asdf:find-system
@@ -18,7 +21,8 @@
                           (package-name package))))
 
 (defun project-root ()
-  (asdf:component-pathname (asdf:find-system (project-name) t)))
+  (or *project-root*
+      (asdf:component-pathname (asdf:find-system (project-name) t))))
 
 (defun project-path (path)
   (merge-pathnames path (project-root)))
