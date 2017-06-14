@@ -4,6 +4,7 @@
                  :utopian/config
                  :utopian/db
                  :utopian/app
+                 :utopian/project
                  :utopian/controller
                  :utopian/skeleton
                  :utopian/watcher

@@ -1,6 +1,9 @@
 (in-package #:cl-user)
 (defpackage utopian/app
   (:use #:cl)
+  (:import-from #:utopian/project
+                #:package-system
+                #:project-name)
   (:import-from #:caveman2
                 #:<app>
                 #:*request*
@@ -27,10 +30,11 @@
                 #:progn-form-last)
   (:import-from #:djula
                 #:add-template-directory)
+  (:import-from #:cl-ppcre)
   (:export #:base-app
-           #:project-root
-           #:project-path
-           #:project-name
+           #:app-root
+           #:app-path
+           #:app-name
            #:route
            #:mount
            #:redirect-to
@@ -49,38 +53,23 @@
 (in-package #:utopian/app)
 
 (defvar *package-app* (make-hash-table :test 'eq))
-(defvar *current-app*)
-
-(defun package-system (package)
-  (asdf:find-system
-   (asdf/package-inferred-system::package-name-system (package-name package))))
 
 (defclass base-app (<app>)
   ((root :initarg :root
          :initform (asdf:component-pathname (package-system *package*))
          :accessor app-root)
    (name :initarg :name
-         :initform (string-downcase
-                    (ppcre:scan-to-strings "^[^/]+"
-                                           (asdf:component-name
-                                            (package-system *package*))))
+         :initform (project-name)
          :accessor app-name)))
 
-(defun project-name ()
-  (app-name *current-app*))
-
-(defun project-root ()
-  (app-root *current-app*))
-
-(defun project-path (path)
-  (merge-pathnames path (project-root)))
+(defun app-path (app path)
+  (merge-pathnames path (app-root app)))
 
 (defmethod initialize-instance :after ((app base-app) &rest initargs)
   (declare (ignore initargs))
   (djula:add-template-directory
    (merge-pathnames #P"views/" (app-root app)))
-  (setf (gethash *package* *package-app*) app)
-  (setf *current-app* app))
+  (setf (gethash *package* *package-app*) app))
 
 (defun find-controller-package (app-name name)
   (let* ((package-name (format nil "~(~A~)/controllers/~(~A~)"
@@ -109,7 +98,8 @@
             (warn "Controller is an internal function: ~S" controller))
           (setf fn controller
                 identifier controller)))))
-  (setf (ningle:route *current-app* url :method method :regexp regexp :identifier identifier)
+  (setf (ningle:route (gethash *package* *package-app*) url
+                      :method method :regexp regexp :identifier identifier)
         (lambda (params)
           (let ((*action* identifier))
             (funcall fn (caveman2.nested-parameter:parse-parameters params))))))
@@ -141,7 +131,7 @@
   ;; Ensure the mount-path ends with "/".
   (setf mount-path
         (ppcre:regex-replace "/?$" mount-path "/"))
-  (let ((package (find-controller-package (app-name *current-app*) controller)))
+  (let ((package (find-controller-package (app-name (gethash *package* *package-app*)) controller)))
     (unless package
       (error "Unknown controller: ~A" controller))
 

@@ -4,7 +4,7 @@
         #:lake
         #:clack
         #:mito
-        #:utopian/app
+        #:utopian/project
         #:utopian/watcher
         #:utopian/config
         #:utopian/db

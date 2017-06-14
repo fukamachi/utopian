@@ -1,7 +1,7 @@
 (in-package #:cl-user)
 (defpackage utopian/config
   (:use #:cl)
-  (:import-from #:utopian/app
+  (:import-from #:utopian/project
                 #:project-path)
   (:export #:*default-app-env*
            #:environment-config

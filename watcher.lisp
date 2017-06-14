@@ -1,7 +1,7 @@
 (in-package #:cl-user)
 (defpackage utopian/watcher
   (:use #:cl)
-  (:import-from #:utopian/app
+  (:import-from #:utopian/project
                 #:project-path)
   (:export #:start-watching))
 (in-package :utopian/watcher)
