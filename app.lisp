@@ -53,6 +53,7 @@
            #:*request*
            #:*response*
            #:*session*
+           #:*exception-class*
            #:http-exception
            #:on-exception
            #:throw-code))
