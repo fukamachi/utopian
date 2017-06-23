@@ -11,6 +11,8 @@
                 #:*request*
                 #:*response*
                 #:*session*
+                #:http-exception
+                #:*exception-class*
                 #:throw-code
                 #:on-exception
                 #:redirect
@@ -37,6 +39,7 @@
            #:app-root
            #:app-path
            #:app-name
+           #:app-exception-class
            #:route
            #:mount
            #:redirect-to
@@ -50,6 +53,7 @@
            #:*request*
            #:*response*
            #:*session*
+           #:http-exception
            #:on-exception
            #:throw-code))
 (in-package #:utopian/app)
@@ -62,7 +66,10 @@
          :accessor app-root)
    (name :initarg :name
          :initform (project-name)
-         :accessor app-name)))
+         :accessor app-name)
+   (exception-class :initarg :exception-class
+                    :initform 'http-exception
+                    :accessor app-exception-class)))
 
 (defun app-path (app path)
   (merge-pathnames path (app-root app)))
@@ -102,11 +109,14 @@
             (warn "Controller is an internal function: ~S" controller))
           (setf fn controller
                 identifier controller)))))
-  (setf (ningle:route (gethash *package* *package-app*) url
-                      :method method :regexp regexp :identifier identifier)
-        (lambda (params)
-          (let ((*action* identifier))
-            (funcall fn (caveman2.nested-parameter:parse-parameters params))))))
+  (let* ((app (gethash *package* *package-app*))
+         (exception-class (app-exception-class app)))
+    (setf (ningle:route app url
+                        :method method :regexp regexp :identifier identifier)
+          (lambda (params)
+            (let ((*action* identifier)
+                  (*exception-class* exception-class))
+              (funcall fn (caveman2.nested-parameter:parse-parameters params)))))))
 
 (defun canonicalize-method (method)
   (etypecase method
