@@ -12,6 +12,7 @@
                 #:*response*
                 #:*session*
                 #:http-exception
+                #:exception-code
                 #:*exception-class*
                 #:throw-code
                 #:on-exception
@@ -55,6 +56,7 @@
            #:*session*
            #:*exception-class*
            #:http-exception
+           #:exception-code
            #:on-exception
            #:throw-code))
 (in-package #:utopian/app)
