@@ -15,24 +15,26 @@
 (defun connect-to-db ()
   (apply #'mito:connect-toplevel (connection-settings :maindb)))
 
+(defun file-package-name (file)
+  (let ((rel-file (project-relative-path file)))
+    (format nil "~A~{/~A~}/~A"
+            (project-name)
+            (cdr (pathname-directory rel-file))
+            (pathname-name rel-file))))
+
+(defun load-file (file)
+  #+quicklisp
+  (ql:quickload (file-package-name file) :silent t)
+  #-quicklisp
+  (asdf:load-system (file-package-name file)))
+
 (defun load-models ()
-  (let ((root-models-path (project-path "models/")))
-    (labels ((directory-models (dir)
-               (append
-                (uiop:directory-files dir "*.lisp")
-                (mapcan #'directory-models (uiop:subdirectories dir))))
-             (model-name (file)
-               (format nil
-                       "~A/models~{/~A~}/~A"
-                       (project-name)
-                       (subseq (pathname-directory file)
-                               (length (pathname-directory root-models-path)))
-                       (pathname-name file))))
-      (dolist (model-file (directory-models root-models-path))
-        #+quicklisp
-        (ql:quickload (model-name model-file) :silent t)
-        #-quicklisp
-        (asdf:load-system (model-name model-file))))))
+  (labels ((directory-models (dir)
+             (append
+              (uiop:directory-files dir "*.lisp")
+              (mapcan #'directory-models (uiop:subdirectories dir)))))
+    (dolist (model-file (directory-models (project-path "models/")))
+      (load-file model-file))))
 
 (defun task-migrate ()
   (mito:migrate (project-path "db/")))
@@ -63,7 +65,7 @@
         (unless (probe-file seeds)
           (error "'db/seeds.lisp' doesn't exist."))
         (mito.logger:with-sql-logging
-          (load seeds))))
+          (load-file seeds))))
     (task "recreate" ()
       (apply #'mito:connect-toplevel
              (car (connection-settings :maindb))

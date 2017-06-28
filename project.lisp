@@ -2,12 +2,15 @@
   (:use #:cl)
   (:import-from #:cl-ppcre
                 #:scan-to-strings)
+  (:import-from #:utopian/utils
+                #:pathname-in-directory-p)
   (:export #:package-system
            #:*project-root*
            #:*project-name*
            #:project-root
            #:project-path
-           #:project-name))
+           #:project-name
+           #:project-relative-path))
 (in-package #:utopian/project)
 
 (defvar *project-root* nil)
@@ -32,3 +35,10 @@
 (defun project-name ()
   (or *project-name*
       (package-root-name *package*)))
+
+(defun project-relative-path (file)
+  (unless (pathname-in-directory-p file (project-root))
+    (error "File '~A' is not in the project directory." file))
+  (pathname
+   (subseq (namestring file)
+           (length (namestring (project-root))))))
