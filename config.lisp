@@ -36,13 +36,16 @@
 
 (defun config (&optional key)
   (let ((config (environment-config
-                 (or (uiop:getenv "APP_ENV") *default-app-env*))))
+                 (or (appenv) *default-app-env*))))
     (if key
         (getf config key)
         config)))
 
 (defun appenv ()
-  (uiop:getenv "APP_ENV"))
+  (let ((appenv (uiop:getenv "APP_ENV")))
+    (when (and (stringp appenv)
+               (not (string= appenv "")))
+      appenv)))
 
 (defun (setf appenv) (env)
   (setf (uiop:getenv "APP_ENV") env))
