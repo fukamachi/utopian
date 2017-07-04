@@ -3,6 +3,8 @@
   (:use #:cl)
   (:import-from #:utopian/project
                 #:project-path)
+  (:import-from #:asdf/package-inferred-system
+                #:package-inferred-system-file-dependencies)
   (:export #:*default-app-env*
            #:environment-config
            #:config
@@ -25,6 +27,11 @@
         (cond
           ((< (car (gethash file *config-cache* '(0 . nil)))
               modified-at)
+           #+quicklisp
+           (ql:quickload (asdf/package-inferred-system::package-inferred-system-file-dependencies file)
+                         :silent t)
+           #-quicklisp
+           (asdf:load-system (asdf/package-inferred-system::package-inferred-system-file-dependencies file))
            (let ((config (uiop:with-safe-io-syntax ()
                            (with-open-file (in file)
                              (uiop:eval-input in)))))

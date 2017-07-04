@@ -9,24 +9,20 @@
         #:utopian/config
         #:utopian/db
         #:uiop)
+  (:import-from #:asdf/package-inferred-system
+                #:file-defpackage-form)
   (:export #:load-tasks))
 (in-package #:utopian/tasks)
 
 (defun connect-to-db ()
   (apply #'mito:connect-toplevel (connection-settings :maindb)))
 
-(defun file-package-name (file)
-  (let ((rel-file (project-relative-path file)))
-    (format nil "~A~{/~A~}/~A"
-            (project-name)
-            (cdr (pathname-directory rel-file))
-            (pathname-name rel-file))))
-
 (defun load-file (file)
-  #+quicklisp
-  (ql:quickload (file-package-name file) :silent t)
-  #-quicklisp
-  (asdf:load-system (file-package-name file)))
+  (let ((system-name (second (asdf/package-inferred-system::file-defpackage-form file))))
+    #+quicklisp
+    (ql:quickload system-name :silent t)
+    #-quicklisp
+    (asdf:load-system system-name)))
 
 (defun load-models ()
   (labels ((directory-models (dir)
