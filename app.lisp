@@ -89,7 +89,7 @@
   (setf (project-name) (app-name app)))
 
 (defgeneric controller-package-name (app controller-name)
-  (:method ((app app) controller-name)
+  (:method ((app base-app) controller-name)
     (format nil "~(~A~)/controllers/~:[~;~:*~A/~]~(~A~)"
             (app-name app)
             (app-controller-base app)
