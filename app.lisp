@@ -93,7 +93,7 @@
     (format nil "~(~A~)/controllers/~:[~;~:*~A/~]~(~A~)"
             (app-name app)
             (app-controller-base app)
-            name)))
+            controller-name)))
 
 (defun find-controller-package (app controller-name)
   (let* ((package-name (controller-package-name app controller-name))
