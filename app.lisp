@@ -40,6 +40,7 @@
            #:app-path
            #:app-name
            #:app-exception-class
+           #:app-controller-base
            #:route
            #:mount
            #:redirect-to
@@ -69,6 +70,9 @@
    (name :initarg :name
          :initform (project-name)
          :accessor app-name)
+   (controller-base :initarg :controller-base
+                    :initform nil
+                    :accessor app-controller-base)
    (exception-class :initarg :exception-class
                     :initform 'http-exception
                     :accessor app-exception-class)))
@@ -84,10 +88,15 @@
   (setf (project-root) (app-root app))
   (setf (project-name) (app-name app)))
 
-(defun find-controller-package (app-name name)
-  (let* ((package-name (format nil "~(~A~)/controllers/~(~A~)"
-                               app-name
-                               name))
+(defgeneric controller-package-name (app controller-name)
+  (:method ((app app) controller-name)
+    (format nil "~(~A~)/controllers/~:[~;~:*~A/~]~(~A~)"
+            (app-name app)
+            (app-controller-base app)
+            name)))
+
+(defun find-controller-package (app controller-name)
+  (let* ((package-name (controller-package-name app controller-name))
          (controller (asdf:find-system package-name nil)))
     (when controller
       (asdf:load-system controller)
@@ -99,8 +108,7 @@
   (when (stringp fn)
     (destructuring-bind (controller action)
         (ppcre:split "::?" fn)
-      (let ((package (find-controller-package (ppcre:scan-to-strings "^[^/]+" (package-name *package*))
-                                              controller)))
+      (let ((package (find-controller-package (gethash *package* *package-app*) controller)))
         (unless package
           (error "Unknown package: ~A" controller))
         (multiple-value-bind (controller status)
@@ -147,7 +155,7 @@
   ;; Ensure the mount-path ends with "/".
   (setf mount-path
         (ppcre:regex-replace "/?$" mount-path "/"))
-  (let ((package (find-controller-package (app-name (gethash *package* *package-app*)) controller)))
+  (let ((package (find-controller-package (gethash *package* *package-app*) controller)))
     (unless package
       (error "Unknown controller: ~A" controller))
 
