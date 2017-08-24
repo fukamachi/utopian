@@ -32,8 +32,8 @@
     (dolist (model-file (directory-models (project-path "models/")))
       (load-file model-file))))
 
-(defun task-migrate ()
-  (mito:migrate (project-path "db/")))
+(defun task-migrate (&key dry-run)
+  (mito:migrate (project-path "db/") :dry-run dry-run))
 
 (defun task-generate-migrations ()
   (mito:generate-migrations (project-path "db/")))
@@ -51,6 +51,11 @@
       (connect-to-db)
       (load-models)
       (task-migrate))
+    (namespace "migrate" ()
+      (task "test" ()
+        (connect-to-db)
+        (load-models)
+        (task-migrate :dry-run t)))
     (task "generate-migrations" ()
       (connect-to-db)
       (load-models)
