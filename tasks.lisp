@@ -9,6 +9,7 @@
         #:utopian/config
         #:utopian/db
         #:uiop)
+  (:import-from #:bordeaux-threads)
   (:import-from #:asdf/package-inferred-system
                 #:file-defpackage-form)
   (:export #:load-tasks))
@@ -38,10 +39,38 @@
 (defun task-generate-migrations ()
   (mito:generate-migrations (project-path "db/")))
 
+(defun spawn (commands)
+  (let ((thread
+          (bt:make-thread
+           (lambda ()
+             (uiop:run-program commands
+                               :output :interactive
+                               :error-output :interactive))
+           :initial-bindings `((*standard-output* . ,*standard-output*)
+                               (*error-output* . ,*error-output*)))))
+    #+sbcl
+    (push (lambda ()
+            (when (and (bt:thread-alive-p thread)
+                       (not (eq (bt:current-thread) thread)))
+              (bt:destroy-thread thread)))
+          sb-ext:*exit-hooks*)
+    thread))
+
 (defun load-tasks ()
   (task "default" ("server"))
 
+  (task "build-assets" ()
+    (uiop:run-program '("npm" "run" "build")
+                      :output :interactive
+                      :error-output :interactive))
+
+  (task "webpack-dev-server" ()
+    (spawn '("npm" "run" "dev-server")))
+
   (task "server" ()
+    (if (productionp)
+        (execute "build-assets")
+        (execute "webpack-dev-server"))
     (clack:clackup (project-path #P"app.lisp")
                    :use-thread nil
                    :debug (not (productionp))))

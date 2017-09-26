@@ -1,3 +1,4 @@
+.DS_Store
 *.fasl
 *.dx32fsl
 *.dx64fsl
@@ -15,5 +16,5 @@ log/*
 
 node_modules/
 
-public/assets/app.css
+public/assets/style.css
 public/assets/bundle.js

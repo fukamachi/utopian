@@ -3,11 +3,19 @@
 <head>
   <meta charset="utf-8">
   <title>{% block title %}{% endblock %}</title>
-  <link rel="stylesheet" type="text/css" media="screen" href="/public/assets/app.css">
-  <script type="text/javascript" src="/public/assets/bundle.js"></script>
+  {% ifequal appenv "development" %}
+  <link rel="stylesheet" type="text/css" media="screen" href="http://localhost:8080/assets/style.css">
+  {% else %}
+  <link rel="stylesheet" type="text/css" media="screen" href="/assets/style.css">
+  {% endifequal %}
   <meta content="{% csrf-token %}" name="csrf-token">
 </head>
 <body>
   {% block content %}{% endblock %}
+  {% ifequal appenv "development" %}
+  <script src="http://localhost:8080/assets/bundle.js"></script>
+  {% else %}
+  <script src="/assets/bundle.js"></script>
+  {% endifequal %}
 </body>
 </html>

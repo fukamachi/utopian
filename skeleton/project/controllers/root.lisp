@@ -4,6 +4,9 @@
   (:export :index))
 (in-package :<% @var name %>/controllers/root)
 
+(defparameter *env*
+  `(:appenv ,(or (appenv) *default-app-env*)))
+
 (defun index (params)
   (declare (ignore params))
-  (render nil :template :index))
+  (render *env* :template :index))
