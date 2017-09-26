@@ -5,6 +5,9 @@
                 #:*action*
                 #:*session*
                 #:*response*)
+  (:import-from #:utopian/config
+                #:appenv
+                #:*default-app-env*)
   (:import-from #:lack.response
                 #:response-headers)
   (:import-from #:lack.middleware.csrf)
@@ -16,9 +19,13 @@
                 #:def-tag-compiler
                 #:*current-store*
                 #:find-template)
-  (:export #:render
+  (:export #:*default-view-env*
+           #:render
            #:render-json))
 (in-package #:utopian/view)
+
+(defvar *default-view-env*
+  `(:appenv ,(or (appenv) *default-app-env*)))
 
 (defun find-djula-template (path)
   (setf path
@@ -53,7 +60,8 @@
                       (find-default-action-template))))
     (unless template
       (error "Unknown template: ~A for ~S" template *action*))
-    (apply #'djula:render-template* template nil env)))
+    (apply #'djula:render-template* template nil
+           (append env *default-view-env*))))
 
 (defun render-json (object &rest args &key from octets)
   (declare (ignore from octets))
