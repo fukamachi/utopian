@@ -26,8 +26,8 @@ Utopian is a web application framework for encouraging rapid web development.
 ### Installation
 
 ```
-# Use Roswell v0.0.6.63 or later
 $ ros install fukamachi/utopian
+$ ros install lake qlot
 ```
 
 Ensure `~/.roswell/bin` is in your shell `$PATH`.
@@ -64,10 +64,16 @@ writing blog/views/errors/404.html
 writing blog/views/layouts/default.html.dj
 ```
 
+### Setting up
+
+```
+$ qlot install
+$ npm install
+```
+
 ### Starting a server
 
 ```
-$ cd blog/
 $ qlot exec lake server
 ```
 
@@ -108,7 +114,7 @@ $ APP_ENV=production clackup app.lisp --server woo --port 8080
 
 ## Copyright
 
-Copyright (c) 2016 Eitaro Fukamachi
+Copyright (c) 2016-2017 Eitaro Fukamachi
 
 ## License
 
