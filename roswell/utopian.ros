@@ -141,20 +141,20 @@ Commands:
                          :name name
                          :action action))
            out)))
-      (let ((destination (pathname (format nil "assets/stylesheets/~A.less" name))))
+      (let ((destination (pathname (format nil "assets/stylesheets/~A.scss" name))))
         (ensure-directories-exist destination)
         (log-writing destination)
         (with-open-file (out destination :direction :output
                                          :if-exists :supersede
                                          :if-does-not-exist :create)
           (princ
-           (render #P"skeleton/asset.less"
+           (render #P"skeleton/asset.scss"
                    (list :name name))
            out)))
-      (with-open-file (out (pathname "assets/stylesheets/app.less")
+      (with-open-file (out (pathname "assets/stylesheets/main.scss")
                            :direction :output
                            :if-exists :append)
-        (format out "~&@import \"~A.less\";~%" name)))))
+        (format out "~&@import \"~A.scss\";~%" name)))))
 
 (defun command-generate (type &rest options)
   (case-equal type

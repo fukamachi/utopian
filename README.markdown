@@ -83,7 +83,7 @@ $ qlot exec lake server
 $ utopian generate controller welcome index
 writing controllers/welcome.lisp
 writing views/welcome/index.html
-writing assets/stylesheets/welcome/index.less
+writing assets/stylesheets/welcome/index.scss
 ```
 
 ## Generating a new model
