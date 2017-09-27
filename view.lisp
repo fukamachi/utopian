@@ -19,13 +19,20 @@
                 #:def-tag-compiler
                 #:*current-store*
                 #:find-template)
-  (:export #:*default-view-env*
+  (:export #:default-view-env
            #:render
            #:render-json))
 (in-package #:utopian/view)
 
-(defvar *default-view-env*
-  `(:appenv ,(or (appenv) *default-app-env*)))
+(defvar *default-view-env-cache*)
+
+(defun default-view-env ()
+  (if (boundp '*default-view-env-cache*)
+      *default-view-env-cache*
+      `(:appenv ,(or (appenv) *default-app-env*))))
+
+(defun (setf default-view-env) (value)
+  (setf *default-view-env-cache* value))
 
 (defun find-djula-template (path)
   (setf path
@@ -61,7 +68,7 @@
     (unless template
       (error "Unknown template: ~A for ~S" template *action*))
     (apply #'djula:render-template* template nil
-           (append env *default-view-env*))))
+           (append env (default-view-env)))))
 
 (defun render-json (object &rest args &key from octets)
   (declare (ignore from octets))
