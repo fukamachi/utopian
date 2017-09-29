@@ -1,5 +1,4 @@
-(in-package #:cl-user)
-(uiop:define-package utopian/tasks
+(uiop:define-package #:utopian/tasks
   (:mix #:cl
         #:lake
         #:clack

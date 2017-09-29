@@ -1,8 +1,8 @@
-(defpackage <% @var name %>/config/application
-  (:use :cl
-        :utopian)
-  (:export :application))
-(in-package :<% @var name %>/config/application)
+(defpackage #:<% @var name %>/config/application
+  (:use #:cl
+        #:utopian)
+  (:export #:application))
+(in-package #:<% @var name %>/config/application)
 
 (defclass application (base-app) ())
 

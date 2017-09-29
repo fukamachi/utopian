@@ -1,13 +1,13 @@
-(defpackage <% @var appname %>/models/<% @var name %>
-  (:use :cl
-        :mito)
-  (:export :<% @var name %><%=
-           (format nil "~{~{~%           :~A-~A~}~}"
+(defpackage #:<% @var appname %>/models/<% @var name %>
+  (:use #:cl
+        #:mito)
+  (:export #:<% @var name %><%=
+           (format nil "~{~{~%           #:~A-~A~}~}"
                    (mapcar (lambda (column)
                              (list (getf env :name) (first column)))
                            (getf env :columns)))
            %>))
-(in-package :<% @var appname %>/models/<% @var name %>)
+(in-package #:<% @var appname %>/models/<% @var name %>)
 
 (defclass <% @var name %> ()
   (<%=

@@ -1,13 +1,13 @@
-(uiop:define-package <% @var name %>
-  (:use :cl
-        :utopian)
-  (:import-from :clack)
-  (:import-from :clack-errors)
-  (:use-reexport :<% @var name %>/config/application
-                 :<% @var name %>/config/routes)
-  (:export :start
-           :stop))
-(in-package :<% @var name %>)
+(uiop:define-package #:<% @var name %>
+  (:use #:cl
+        #:utopian)
+  (:import-from #:clack)
+  (:import-from #:clack-errors)
+  (:use-reexport #:<% @var name %>/config/application
+                 #:<% @var name %>/config/routes)
+  (:export #:start
+           #:stop))
+(in-package #:<% @var name %>)
 
 (defvar *handler*)
 

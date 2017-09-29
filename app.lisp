@@ -1,5 +1,4 @@
-(in-package #:cl-user)
-(defpackage utopian/app
+(defpackage #:utopian/app
   (:use #:cl)
   (:import-from #:utopian/project
                 #:package-system

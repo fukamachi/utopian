@@ -4,9 +4,9 @@
 exec ros -Q -- $0 "$@"
 |#
 
-(defpackage utopian/roswell/utopian.ros
-  (:use :cl))
-(in-package :utopian/roswell/utopian.ros)
+(defpackage #:utopian/roswell/utopian.ros
+  (:use #:cl))
+(in-package #:utopian/roswell/utopian.ros)
 
 (ql:quickload '(:utopian :split-sequence) :silent t)
 

@@ -2,13 +2,13 @@
 
 (push (uiop:pathname-directory-pathname *load-pathname*)
       asdf:*central-registry*)
-(ql:quickload :<% @var name %> :silent t)
+(ql:quickload '(#:<% @var name %>) :silent t)
 
-(uiop:define-package lake.user
-  (:mix :cl
-        :lake
-        :utopian))
-(in-package :lake.user)
+(uiop:define-package #:lake.user
+  (:mix #:cl
+        #:lake
+        #:utopian))
+(in-package #:lake.user)
 
 (utopian:load-tasks)
 

@@ -1,4 +1,4 @@
-(defpackage utopian/project
+(defpackage #:utopian/project
   (:use #:cl)
   (:import-from #:cl-ppcre
                 #:scan-to-strings)

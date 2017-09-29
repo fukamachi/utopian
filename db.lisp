@@ -1,5 +1,4 @@
-(in-package #:cl-user)
-(defpackage utopian/db
+(defpackage #:utopian/db
   (:use #:cl)
   (:import-from #:utopian/config
                 #:config)

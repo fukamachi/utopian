@@ -1,5 +1,4 @@
-(in-package #:cl-user)
-(defpackage utopian/controller
+(defpackage #:utopian/controller
   (:use #:cl)
   (:import-from #:utopian/app
                 #:base-app)

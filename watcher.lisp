@@ -1,10 +1,9 @@
-(in-package #:cl-user)
-(defpackage utopian/watcher
+(defpackage #:utopian/watcher
   (:use #:cl)
   (:import-from #:utopian/project
                 #:project-path)
   (:export #:start-watching))
-(in-package :utopian/watcher)
+(in-package #:utopian/watcher)
 
 (defun files-including-subdirectories (path)
   (append (uiop:directory-files path)

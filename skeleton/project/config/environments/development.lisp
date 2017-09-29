@@ -1,7 +1,7 @@
-(defpackage <% @var name %>/config/environments/development
-  (:use :cl
-        :utopian))
-(in-package :<% @var name %>/config/environments/development)
+(defpackage #:<% @var name %>/config/environments/development
+  (:use #:cl
+        #:utopian))
+(in-package #:<% @var name %>/config/environments/development)
 
 `(:databases
   ((:maindb . (:sqlite3

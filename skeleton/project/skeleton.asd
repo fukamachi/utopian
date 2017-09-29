@@ -7,4 +7,4 @@
   :depends-on ("<% @var name %>/boot"
                "cl-syntax-annot"))
 
-(register-system-packages "<% @var name %>/boot" '(:<% @var name %>))
+(register-system-packages "<% @var name %>/boot" '(#:<% @var name %>))

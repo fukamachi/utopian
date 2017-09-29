@@ -2,14 +2,14 @@
       asdf:*central-registry*)
 (ql:quickload :<% @var name %> :silent t)
 
-(defpackage <% @var name %>/app
-  (:use :cl
-        :<% @var name %>
-        :utopian)
-  (:import-from :lack
-                :builder)
-  (:import-from :mito))
-(in-package :<% @var name %>/app)
+(defpackage #:<% @var name %>/app
+  (:use #:cl
+        #:<% @var name %>
+        #:utopian)
+  (:import-from #:lack
+                #:builder)
+  (:import-from #:mito))
+(in-package #:<% @var name %>/app)
 
 (apply #'mito:connect-toplevel (connection-settings :maindb))
 

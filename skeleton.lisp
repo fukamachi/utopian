@@ -1,5 +1,4 @@
-(in-package #:cl-user)
-(defpackage utopian/skeleton
+(defpackage #:utopian/skeleton
   (:use #:cl)
   (:import-from #:cl-project)
   (:export #:make-project))
