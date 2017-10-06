@@ -5,11 +5,11 @@
 
 `(:databases
   ((:maindb . <% (cond ((string-equal (getf env :database) "postgres") -%>(:postgres :database-name "<% @var name %>"
-                         :username "<% @var name %>"
-                         :password ""
+                         ;; :username "<% @var name %>"
+                         ;; :password ""
                          :microsecond-precision t)
               <%- ) ((string-equal (getf env :database) "mysql") -%>(:mysql :database-name "<% @var name %>"
-                         :username "<% @var name %>"
+                         :username "root"
                          :password "")
               <%- ) (t -%>(:sqlite3
                :database-name ,(project-path #P"db/development.db"))
