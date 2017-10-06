@@ -14,8 +14,13 @@
   (:export #:load-tasks))
 (in-package #:utopian/tasks)
 
-(defun connect-to-db ()
-  (apply #'mito:connect-toplevel (connection-settings :maindb)))
+(defun connect-to-db (&key (database-name nil database-specified-p))
+  (destructuring-bind (driver &rest args)
+      (connection-settings :maindb)
+    (when (and database-specified-p
+               (not (eq driver :sqlite3)))
+      (setf args (append `(:database-name ,database-name) args)))
+    (apply #'mito:connect-toplevel driver args)))
 
 (defun load-file (file)
   (let ((system-name (second (asdf/package-inferred-system::file-defpackage-form file))))
@@ -95,20 +100,37 @@
           (error "'db/seeds.lisp' doesn't exist."))
         (mito.logger:with-sql-logging
           (load-file seeds))))
-    (task "recreate" ()
-      (apply #'mito:connect-toplevel
-             (car (connection-settings :maindb))
-             :database-name "postgres"
-             (alexandria:remove-from-plist
-              (cdr (connection-settings :maindb))
-              :database-name))
-      (let ((dbname (getf (cdr (connection-settings :maindb)) :database-name)))
-        (mito:execute-sql
-         (format nil "DROP DATABASE \"~A\"" dbname))
-        (mito:execute-sql
-         (format nil "CREATE DATABASE \"~A\"" dbname)))
-      (mapc #'delete-file (uiop:directory-files (project-path #P"db/migrations/")))
-      (connect-to-db)
+    (task "create" ()
+      (case (car (connection-settings :maindb))
+        (:postgres
+         (connect-to-db :database-name "postgres")
+         (let ((dbname (getf (cdr (connection-settings :maindb)) :database-name)))
+           (mito:execute-sql
+            (format nil "CREATE DATABASE \"~A\"" dbname))))
+        (:mysql
+         (connect-to-db :database-name nil)
+         (let ((dbname (getf (cdr (connection-settings :maindb)) :database-name)))
+           (mito:execute-sql
+            (format nil "CREATE DATABASE \"~A\"" dbname))))
+        (:sqlite3
+         (connect-to-db)))
       (load-models)
       (task-generate-migrations)
-      (task-migrate))))
+      (task-migrate))
+    (task "drop" ()
+      (case (car (connection-settings :maindb))
+        (:postgres
+         (connect-to-db :database-name "postgres")
+         (let ((dbname (getf (cdr (connection-settings :maindb)) :database-name)))
+           (mito:execute-sql
+            (format nil "DROP DATABASE \"~A\"" dbname))))
+        (:mysql
+         (connect-to-db :database-name nil)
+         (let ((dbname (getf (cdr (connection-settings :maindb)) :database-name)))
+           (mito:execute-sql
+            (format nil "DROP DATABASE \"~A\"" dbname))))
+        (:sqlite3
+         (delete-file (getf (cdr (connection-settings :maindb)) :database-name)))))
+    (task "recreate" ()
+      (lake:execute "drop")
+      (lake:execute "create"))))
