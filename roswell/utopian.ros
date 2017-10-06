@@ -44,6 +44,8 @@ Commands:
                           (list :description (pop options)))
                          ("--license"
                           (list :license (pop options)))
+                         ("--database"
+                          (list :database (pop options)))
                          (otherwise (error "Unknown option ~A" option)))))
         (path
           (uiop:ensure-directory-pathname path)))
