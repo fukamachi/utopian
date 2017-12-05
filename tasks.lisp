@@ -8,9 +8,9 @@
         #:utopian/config
         #:utopian/db
         #:uiop)
+  (:import-from #:utopian/utils
+                #:file-package-name)
   (:import-from #:bordeaux-threads)
-  (:import-from #:asdf/package-inferred-system
-                #:file-defpackage-form)
   (:export #:load-tasks))
 (in-package #:utopian/tasks)
 
@@ -23,7 +23,7 @@
     (apply #'mito:connect-toplevel driver args)))
 
 (defun load-file (file)
-  (let ((system-name (second (asdf/package-inferred-system::file-defpackage-form file))))
+  (let ((system-name (file-package-name file)))
     #+quicklisp
     (ql:quickload system-name :silent t)
     #-quicklisp

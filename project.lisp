@@ -2,19 +2,15 @@
   (:use #:cl)
   (:import-from #:cl-ppcre
                 #:scan-to-strings)
-  (:export #:package-system
-           #:project-root
+  (:export #:project-root
            #:project-path
            #:project-name
-           #:project-relative-path))
+           #:project-relative-path
+           #:project-models))
 (in-package #:utopian/project)
 
 (defvar *project-root* nil)
 (defvar *project-name* nil)
-
-(defun package-system (package)
-  (asdf:find-system
-   (asdf/package-inferred-system::package-name-system (package-name package))))
 
 (defun package-root-name (package)
   (string-downcase
@@ -47,3 +43,10 @@
   (pathname
    (subseq (namestring file)
            (length (namestring (project-root))))))
+
+(defun project-models (&optional (project-root (project-root)))
+  (labels ((directory-models (dir)
+             (append
+              (uiop:directory-files dir "*.lisp")
+              (mapcan #'directory-models (uiop:subdirectories dir)))))
+    (directory-models (merge-pathnames "models/" project-root))))

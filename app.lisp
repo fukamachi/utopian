@@ -1,9 +1,10 @@
 (defpackage #:utopian/app
   (:use #:cl)
   (:import-from #:utopian/project
-                #:package-system
                 #:project-name
                 #:project-root)
+  (:import-from #:utopian/utils
+                #:package-system)
   (:import-from #:caveman2
                 #:<app>
                 #:*request*
