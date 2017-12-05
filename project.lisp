@@ -2,8 +2,6 @@
   (:use #:cl)
   (:import-from #:cl-ppcre
                 #:scan-to-strings)
-  (:import-from #:utopian/utils
-                #:pathname-in-directory-p)
   (:export #:package-system
            #:project-root
            #:project-path
@@ -44,7 +42,7 @@
   (setf *project-name* name))
 
 (defun project-relative-path (file)
-  (unless (pathname-in-directory-p file (project-root))
+  (unless (uiop:subpathp file (project-root))
     (error "File '~A' is not in the project directory." file))
   (pathname
    (subseq (namestring file)
