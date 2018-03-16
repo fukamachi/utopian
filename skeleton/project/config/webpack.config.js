@@ -3,11 +3,15 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-  entry: './assets/javascripts/app.js',
+  entry: [
+    'webpack-dev-server/client?http://localhost:8080',
+    'webpack/hot/only-dev-server',
+    path.join(__dirname, '..', 'assets/javascripts/main.js')
+  ],
   output: {
     path: path.join(__dirname, '..', 'public'),
     filename: 'assets/bundle.js',
-    publicPath: 'http://localhost:8080'
+    publicPath: 'http://localhost:8080/'
   },
   module: {
     rules: [

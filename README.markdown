@@ -45,7 +45,7 @@ writing blog/README.markdown
 writing blog/Lakefile
 writing blog/.gitignore
 writing blog/.babelrc
-writing blog/assets/javascripts/app.js
+writing blog/assets/javascripts/main.js
 writing blog/assets/stylesheets/main.scss
 writing blog/config/webpack.config.production.js
 writing blog/config/webpack.config.js
