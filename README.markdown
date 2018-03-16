@@ -17,7 +17,6 @@ Utopian is a web application framework for encouraging rapid web development.
 
 * [Roswell](https://github.com/roswell/roswell)
 * [Qlot](https://github.com/fukamachi/qlot)
-* [Lake](https://github.com/takagi/lake)
 * Node.js & npm
 * SQLite3
 
@@ -27,7 +26,7 @@ Utopian is a web application framework for encouraging rapid web development.
 
 ```
 $ ros install fukamachi/utopian
-$ ros install lake qlot
+$ ros install qlot
 ```
 
 Ensure `~/.roswell/bin` is in your shell `$PATH`.
@@ -74,7 +73,7 @@ $ npm install
 ### Starting a server
 
 ```
-$ qlot exec lake server
+$ qlot exec quicklisp/bin/lake server
 ```
 
 ## Generating a new controller
@@ -93,7 +92,7 @@ $ utopian generate model user name:varchar:20 email:varchar:255
 writing models/user.lisp
 ```
 
-Run `qlot exec lake db:generate-migrations` after this for generating a migration file and apply it with `qlot exec lake db:migrate`.
+Run `qlot exec quicklisp/bin/lake db:generate-migrations` after this for generating a migration file and apply it with `qlot exec quicklisp/bin/lake db:migrate`.
 
 ## Deployment
 
