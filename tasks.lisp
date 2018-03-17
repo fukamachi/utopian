@@ -101,22 +101,23 @@
         (mito.logger:with-sql-logging
           (load-file seeds))))
     (task "create" ()
-      (case (car (connection-settings :maindb))
-        (:postgres
-         (connect-to-db :database-name "postgres")
-         (let ((dbname (getf (cdr (connection-settings :maindb)) :database-name)))
-           (mito:execute-sql
-            (format nil "CREATE DATABASE \"~A\"" dbname))))
-        (:mysql
-         (connect-to-db :database-name nil)
-         (let ((dbname (getf (cdr (connection-settings :maindb)) :database-name)))
-           (mito:execute-sql
-            (format nil "CREATE DATABASE \"~A\"" dbname))))
-        (:sqlite3
-         (connect-to-db)))
-      (load-models)
-      (task-generate-migrations)
-      (task-migrate))
+      (let ((mito:*mito-logger-stream* *standard-output*))
+        (case (car (connection-settings :maindb))
+          (:postgres
+           (connect-to-db :database-name "postgres")
+           (let ((dbname (getf (cdr (connection-settings :maindb)) :database-name)))
+             (mito:execute-sql
+              (format nil "CREATE DATABASE \"~A\"" dbname))))
+          (:mysql
+           (connect-to-db :database-name nil)
+           (let ((dbname (getf (cdr (connection-settings :maindb)) :database-name)))
+             (mito:execute-sql
+              (format nil "CREATE DATABASE \"~A\"" dbname))))
+          (:sqlite3
+           (connect-to-db)))
+        (load-models)
+        (task-generate-migrations)
+        (task-migrate)))
     (task "drop" ()
       (case (car (connection-settings :maindb))
         (:postgres
