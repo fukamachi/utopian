@@ -42,11 +42,19 @@ $ utopian new blog
 $ utopian new blog --database postgres
 ```
 
-### Setting up
+### Installing dependencies
 
 ```
 $ qlot install
 $ npm install
+```
+
+### Setting database
+
+The project includes the database settings at `config/environments/development.lisp`. Configure it and run this command:
+
+```
+$ qlot exec quicklisp/bin/lake db:create
 ```
 
 ### Starting a server
