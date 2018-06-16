@@ -1,14 +1,19 @@
 (defpackage #:utopian/watcher
   (:use #:cl)
   (:import-from #:utopian/project
-                #:project-path)
+                #:project-root)
   (:export #:start-watching))
 (in-package #:utopian/watcher)
 
 (defun files-including-subdirectories (path)
   (append (uiop:directory-files path)
           (mapcan #'files-including-subdirectories
-                  (uiop:subdirectories path))))
+                  (remove-if (lambda (path)
+                               (and (uiop:directory-pathname-p path)
+                                    (member (first (last (pathname-directory path)))
+                                            '("quicklisp" "node_modules" ".git")
+                                            :test 'equal)))
+                             (uiop:subdirectories path)))))
 
 (defvar *files-modified* (make-hash-table :test 'equal))
 
@@ -21,10 +26,7 @@
      #'lisp-file-p
      (remove-if
       #'dot-file-p
-      (append
-       (list (project-path #P"config/routes.lisp"))
-       (files-including-subdirectories (project-path #P"controllers/"))
-       (files-including-subdirectories (project-path #P"models/")))))))
+      (files-including-subdirectories (project-root))))))
 
 (defun on-update (file)
   (handler-case
