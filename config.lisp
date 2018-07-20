@@ -26,11 +26,12 @@
         (cond
           ((< (car (gethash file *config-cache* '(0 . nil)))
               modified-at)
-           #+quicklisp
-           (ql:quickload (asdf/package-inferred-system::package-inferred-system-file-dependencies file)
-                         :silent t)
-           #-quicklisp
-           (asdf:load-system (asdf/package-inferred-system::package-inferred-system-file-dependencies file))
+           (let ((dependencies (asdf/package-inferred-system::package-inferred-system-file-dependencies file)))
+             (when dependencies
+               #+quicklisp
+               (ql:quickload dependencies :silent t)
+               #-quicklisp
+               (asdf:load-system dependencies)))
            (let ((config (uiop:with-safe-io-syntax ()
                            (with-open-file (in file)
                              (uiop:eval-input in)))))
