@@ -4,6 +4,9 @@
                 #:*config-dir*
                 #:config)
   (:import-from #:ningle)
+  (:import-from #:caveman2
+                #:<app>
+                #:throw-code)
   (:import-from #:lack
                 #:builder)
   (:import-from #:lack.component
@@ -11,10 +14,20 @@
                 #:call)
   (:import-from #:closer-mop)
   (:export #:defapp
-           #:with-config))
+           #:with-config
+
+           ;; from Caveman2
+           #:*request*
+           #:*response*
+           #:*session*
+           #:*exception-class*
+           #:http-exception
+           #:exception-code
+           #:on-exception
+           #:throw-code))
 (in-package #:utopian/app)
 
-(defclass utopian-app (ningle:<app>) ())
+(defclass utopian-app (caveman2:<app>) ())
 
 (defmacro with-config ((app) &body body)
   `(let ((*config-dir* (slot-value (class-of ,app) 'config)))

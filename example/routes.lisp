@@ -17,4 +17,7 @@
   (render :entries (mito:select-dao 'entry)))
 
 (defroute entry (params)
-  (render :entry (mito:find-dao 'entry :id (aget params :id))))
+  (let ((entry (mito:find-dao 'entry :id (aget params :id))))
+    (unless entry
+      (throw-code 404))
+    (render :entry entry)))
