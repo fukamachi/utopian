@@ -1,0 +1,6 @@
+# Myblog
+
+```
+$ make migrate
+$ make
+```
