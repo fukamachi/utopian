@@ -41,9 +41,11 @@
            #:app-name
            #:app-exception-class
            #:app-controller-base
+           #:app-template-store
            #:route
            #:mount
            #:redirect-to
+           #:*app*
            #:*action*
 
            ;; from MyWay
@@ -75,7 +77,9 @@
                     :accessor app-controller-base)
    (exception-class :initarg :exception-class
                     :initform 'http-exception
-                    :accessor app-exception-class)))
+                    :accessor app-exception-class)
+   (template-store :initform (make-instance 'djula:file-store)
+                   :reader app-template-store)))
 
 (defun app-path (app path)
   (merge-pathnames path (app-root app)))
@@ -83,7 +87,8 @@
 (defmethod initialize-instance :after ((app base-app) &rest initargs)
   (declare (ignore initargs))
   (djula:add-template-directory
-   (merge-pathnames #P"views/" (app-root app)))
+   (merge-pathnames #P"views/" (app-root app))
+   (app-template-store app))
   (setf (gethash *package* *package-app*) app)
   (setf (project-root) (app-root app))
   (setf (project-name) (app-name app)))
@@ -102,6 +107,7 @@
       (asdf:load-system controller)
       (find-package (string-upcase package-name)))))
 
+(defvar *app*)
 (defvar *action*)
 
 (defun %route (method url fn &key regexp identifier)
@@ -125,7 +131,8 @@
                         :method method :regexp regexp :identifier identifier)
           (lambda (params)
             (let ((*action* identifier)
-                  (*exception-class* exception-class))
+                  (*exception-class* exception-class)
+                  (*app* app))
               (funcall fn (caveman2.nested-parameter:parse-parameters params)))))))
 
 (defun canonicalize-method (method)

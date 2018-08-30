@@ -1,9 +1,11 @@
 (defpackage #:utopian/view
   (:use #:cl)
   (:import-from #:utopian/app
+                #:*app*
                 #:*action*
                 #:*session*
-                #:*response*)
+                #:*response*
+                #:app-template-store)
   (:import-from #:utopian/config
                 #:appenv
                 #:*default-app-env*)
@@ -33,17 +35,17 @@
 (defun (setf default-view-env) (value)
   (setf *default-view-env-cache* value))
 
-(defun find-djula-template (path)
+(defun find-djula-template (path &optional (template-store djula:*current-store*))
   (setf path
         (etypecase path
           (keyword (string-downcase path))
           (pathname (namestring path))
           (string path)))
-  (or (djula:find-template djula:*current-store* path nil)
-      (djula:find-template djula:*current-store* (format nil "~A.html.dj" path) nil)
-      (djula:find-template djula:*current-store* (format nil "~A.html" path) nil)))
+  (or (djula:find-template template-store path nil)
+      (djula:find-template template-store (format nil "~A.html.dj" path) nil)
+      (djula:find-template template-store (format nil "~A.html" path) nil)))
 
-(defun find-default-action-template (&optional (action *action*))
+(defun find-default-action-template (&optional (action *action*) (app *app*))
   (assert action)
   (flet ((action-controller (action)
            (let ((match
@@ -58,11 +60,11 @@
                         "~A/~A"
                         (action-controller action)
                         (string-downcase action))))
-      (find-djula-template html))))
+      (find-djula-template html (app-template-store app)))))
 
 (defun render (env &key template)
   (let ((template (if template
-                      (djula:compile-template* (find-djula-template template))
+                      (djula:compile-template* (find-djula-template template (app-template-store *app*)))
                       (find-default-action-template))))
     (unless template
       (error "Unknown template: ~A for ~S" template *action*))
