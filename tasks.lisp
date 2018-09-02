@@ -40,8 +40,8 @@
 (defun task-migrate (&key dry-run)
   (mito:migrate (project-path "db/") :dry-run dry-run))
 
-(defun task-generate-migrations ()
-  (mito:generate-migrations (project-path "db/")))
+(defun task-generate-migrations (&rest args)
+  (apply #'mito:generate-migrations (project-path "db/") args))
 
 (defun spawn (commands)
   (let ((thread
@@ -93,6 +93,11 @@
       (connect-to-db)
       (load-models)
       (task-generate-migrations))
+    (namespace "generate-migrations" ()
+      (task "force" ()
+        (connect-to-db)
+        (load-models)
+        (task-generate-migrations :force t)))
     (task "seed" ()
       (connect-to-db)
       (let ((seeds (project-path #P"db/seeds.lisp")))
