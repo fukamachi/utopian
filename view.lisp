@@ -7,8 +7,7 @@
                 #:*response*
                 #:app-template-store)
   (:import-from #:utopian/config
-                #:appenv
-                #:*default-app-env*)
+                #:appenv)
   (:import-from #:lack.response
                 #:response-headers)
   (:import-from #:lack.middleware.csrf)
@@ -30,7 +29,7 @@
 (defun default-view-env ()
   (if (boundp '*default-view-env-cache*)
       *default-view-env-cache*
-      `(:appenv ,(or (appenv) *default-app-env*))))
+      `(:appenv ,(appenv))))
 
 (defun (setf default-view-env) (value)
   (setf *default-view-env-cache* value))

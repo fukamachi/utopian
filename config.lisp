@@ -42,17 +42,17 @@
            (cdr (gethash file *config-cache*))))))))
 
 (defun config (&optional key)
-  (let ((config (environment-config
-                 (or (appenv) *default-app-env*))))
+  (let ((config (environment-config (appenv))))
     (if key
         (getf config key)
         config)))
 
 (defun appenv ()
   (let ((appenv (uiop:getenv "APP_ENV")))
-    (when (and (stringp appenv)
-               (not (string= appenv "")))
-      appenv)))
+    (if (and (stringp appenv)
+             (not (string= appenv "")))
+        appenv
+        *default-app-env*)))
 
 (defun (setf appenv) (env)
   (setf (uiop:getenv "APP_ENV") env))
