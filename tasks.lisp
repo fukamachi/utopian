@@ -40,6 +40,9 @@
 (defun task-migrate (&key dry-run)
   (mito:migrate (project-path "db/") :dry-run dry-run))
 
+(defun task-migrate-status ()
+  (mito:migration-status (project-path "db/")))
+
 (defun task-generate-migrations (&rest args)
   (apply #'mito:generate-migrations (project-path "db/") args))
 
@@ -88,7 +91,10 @@
       (task "test" ()
         (connect-to-db)
         (load-models)
-        (task-migrate :dry-run t)))
+        (task-migrate :dry-run t))
+      (task "status" ()
+        (connect-to-db)
+        (task-migrate-status)))
     (task "generate-migrations" ()
       (connect-to-db)
       (load-models)
