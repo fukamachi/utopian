@@ -85,12 +85,10 @@
   (namespace "db"
     (task "migrate" ()
       (connect-to-db)
-      (load-models)
       (task-migrate))
     (namespace "migrate" ()
       (task "test" ()
         (connect-to-db)
-        (load-models)
         (task-migrate :dry-run t))
       (task "status" ()
         (connect-to-db)
