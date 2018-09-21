@@ -3,7 +3,7 @@
   (:use #:cl)
   (:use-reexport #:utopian/model
                  #:utopian/route
-                 #:utopian/view
-                 #:utopian/app)
+                 #:utopian/app
+                 #:utopian/config)
   (:import-from #:utopian/tasks))
 (in-package #:utopian)

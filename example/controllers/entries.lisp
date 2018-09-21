@@ -1,22 +1,18 @@
-(defpackage #:myblog/routes
+(defpackage #:myblog/controllers/entries
   (:use #:cl
         #:utopian
-        #:myblog/views
+        #:myblog/views/entries
         #:myblog/models)
   (:import-from #:assoc-utils
                 #:aget)
-  (:export #:index
-           #:entries
-           #:entry))
-(in-package #:myblog/routes)
+  (:export #:listing
+           #:show))
+(in-package #:myblog/controllers/entries)
 
-(defroute index ()
-  (render))
-
-(defroute entries ()
+(defroute listing ()
   (render :entries (mito:select-dao 'entry)))
 
-(defroute entry (params)
+(defroute show (params)
   (let ((entry (mito:find-dao 'entry :id (aget params :id))))
     (unless entry
       (throw-code 404))
