@@ -1,9 +1,4 @@
-(defpackage #:myblog/models
-  (:use #:cl
-        #:utopian)
-  (:export #:entry
-           #:entry-title))
+(uiop:define-package #:myblog/models
+  (:use #:cl)
+  (:use-reexport #:myblog/models/entry))
 (in-package #:myblog/models)
-
-(defmodel entry ()
-  ((title :col-type :text)))

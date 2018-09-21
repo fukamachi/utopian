@@ -7,3 +7,5 @@
   :depends-on ("utopian/main"))
 
 (register-system-packages "lack-component" '(#:lack.component))
+(register-system-packages "lack-request" '(#:lack.request))
+(register-system-packages "lack-response" '(#:lack.response))

@@ -3,4 +3,5 @@
   :author "Eitaro Fukamachi"
   :version "0.1.0"
   :depends-on ("myblog/app"
-               "cl-syntax"))
+               "cl-syntax"
+               "cl-syntax-lsx"))
