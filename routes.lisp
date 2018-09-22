@@ -78,7 +78,7 @@
 
 (defmacro defroutes (name routing-rules &rest options)
   (let ((*controllers-directory*
-          (uiop:pathname-directory-pathname (or *load-pathname* *compile-file-pathname*))))
+          (uiop:pathname-directory-pathname (or *compile-file-pathname* *load-pathname*))))
     (loop for option in options
           do (ecase (first option)
                (:directory
@@ -86,10 +86,11 @@
                   (setf *controllers-directory*
                         (uiop:ensure-directory-pathname
                          (merge-pathnames directory *controllers-directory*)))))))
-    `(let ((*controllers-directory* ,*controllers-directory*))
+    `(progn
        (defvar ,name (myway:make-mapper))
        (myway:clear-routes ,name)
-       ,@(loop for (method rule controller) in routing-rules
-               collect `(myway:connect ,name ,rule (parse-controller-rule ,controller)
-                                       :method ,method))
-       ,name)))
+       (let ((*controllers-directory* ,*controllers-directory*))
+         ,@(loop for (method rule controller) in routing-rules
+                 collect `(myway:connect ,name ,rule (parse-controller-rule ,controller)
+                                         :method ,method))
+         ,name))))

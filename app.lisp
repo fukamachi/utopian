@@ -85,33 +85,35 @@
         (finalize-response *response*)))))
 
 (defclass utopian-app-class (standard-class)
-  ((config :initarg :config
+  ((base-directory :initarg :base-directory
+                   :initform *default-pathname-defaults*)
+   (config :initarg :config
            :initform nil)))
-
-(defvar *app-pathname*)
 
 (defmethod initialize-instance :after ((class utopian-app-class) &rest initargs &key config &allow-other-keys)
   (declare (ignore initargs))
   (assert (and (listp config)
                (null (rest config))))
-  (when config
-    (setf (slot-value class 'config)
-          (merge-pathnames (first config) *app-pathname*))))
+  (with-slots (base-directory config) class
+    (when config
+      (setf config
+            (merge-pathnames (first config) (first base-directory))))))
 
 (defmethod reinitialize-instance :after ((class utopian-app-class) &rest initargs &key config &allow-other-keys)
   (declare (ignore initargs))
   (assert (and (listp config)
                (null (rest config))))
-  (when config
-    (setf (slot-value class 'config)
-          (merge-pathnames (first config) *app-pathname*))))
+  (with-slots (base-directory config) class
+    (when config
+      (setf config
+            (merge-pathnames (first config) (first base-directory))))))
 
 (defmethod c2mop:validate-superclass ((class utopian-app-class) (super standard-class))
   t)
 
 (defmacro defapp (name superclasses slots &rest options)
-  `(let ((*app-pathname* ,(uiop:pathname-directory-pathname (or *load-pathname* *compile-file-pathname*))))
-     (defclass ,name (application ,@superclasses)
-       ,slots
-       (:metaclass utopian-app-class)
-       ,@options)))
+  `(defclass ,name (application ,@superclasses)
+     ,slots
+     (:metaclass utopian-app-class)
+     (:base-directory ,(uiop:pathname-directory-pathname (or *compile-file-pathname* *load-pathname*)))
+     ,@options))
