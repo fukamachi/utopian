@@ -3,6 +3,9 @@
   (:import-from #:utopian/config
                 #:*config-dir*
                 #:config)
+  (:import-from #:utopian/context
+                #:*request*
+                #:*response*)
   (:import-from #:lack
                 #:builder)
   (:import-from #:lack.component
@@ -16,16 +19,11 @@
   (:import-from #:lsx)
   (:import-from #:myway)
   (:import-from #:closer-mop)
-  (:export #:*request*
-           #:*response*
-           #:application
+  (:export #:application
            #:make-request
            #:make-response
            #:defapp))
 (in-package #:utopian/app)
-
-(defvar *request*)
-(defvar *response*)
 
 (defclass application (lack-component)
   ((routes :initarg :routes)))
@@ -35,7 +33,8 @@
      ,@body))
 
 (defmethod to-app :around ((app application))
-  (let ((config-dir (slot-value (class-of app) 'config)))
+  (let* ((config-dir (slot-value (class-of app) 'config))
+         (*config-dir* config-dir))
     (builder
      (lambda (app)
        (lambda (env)
@@ -71,14 +70,15 @@
   ((config :initarg :config
            :initform nil)))
 
+(defvar *app-pathname*)
+
 (defmethod initialize-instance :after ((class utopian-app-class) &rest initargs &key config &allow-other-keys)
   (declare (ignore initargs))
   (assert (and (listp config)
                (null (rest config))))
   (when config
     (setf (slot-value class 'config)
-          (merge-pathnames (first config)
-                           (uiop:pathname-directory-pathname (or *load-pathname* *compile-file-pathname*))))))
+          (merge-pathnames (first config) *app-pathname*))))
 
 (defmethod reinitialize-instance :after ((class utopian-app-class) &rest initargs &key config &allow-other-keys)
   (declare (ignore initargs))
@@ -86,14 +86,14 @@
                (null (rest config))))
   (when config
     (setf (slot-value class 'config)
-          (merge-pathnames (first config)
-                           (uiop:pathname-directory-pathname (or *load-pathname* *compile-file-pathname*))))))
+          (merge-pathnames (first config) *app-pathname*))))
 
 (defmethod c2mop:validate-superclass ((class utopian-app-class) (super standard-class))
   t)
 
 (defmacro defapp (name superclasses slots &rest options)
-  `(defclass ,name (application ,@superclasses)
-     ,slots
-     (:metaclass utopian-app-class)
-     ,@options))
+  `(let ((*app-pathname* ,(uiop:pathname-directory-pathname (or *load-pathname* *compile-file-pathname*))))
+     (defclass ,name (application ,@superclasses)
+       ,slots
+       (:metaclass utopian-app-class)
+       ,@options)))

@@ -1,10 +1,15 @@
-(defpackage #:utopian/route
+(defpackage #:utopian/routes
   (:use #:cl)
+  (:import-from #:utopian/context
+                #:*request*
+                #:*response*)
   (:import-from #:myway)
+  (:import-from #:lack.request
+                #:request-parameters)
   (:export #:defroute
            #:render
            #:defroutes))
-(in-package #:utopian/route)
+(in-package #:utopian/routes)
 
 (defvar *current-action*)
 
@@ -34,9 +39,16 @@
         (asdf:load-system (second package-form))
         (load file))))
 
+(defun make-controller (action)
+  (lambda (params)
+    (funcall action
+             (append (loop for (k v) on params by #'cddr
+                           collect (cons k v))
+                     (request-parameters *request*)))))
+
 (defun parse-controller-rule (rule)
   (etypecase rule
-    (function rule)
+    ((or function symbol) (make-controller rule))
     (string
      (destructuring-bind (controller-name action-name)
          (ppcre:split "::?" rule)
@@ -54,8 +66,8 @@
            (let ((package (find-package package-name)))
              (unless package
                (error "No package '~A' in '~A'" package-name file))
-             (let ((action (intern (string-upcase action-name) package)))
-               (symbol-function action)))))))))
+             (let ((action (symbol-function (intern (string-upcase action-name) package))))
+               (make-controller action)))))))))
 
 (defmacro defroutes (name routing-rules &rest options)
   (let ((*controllers-directory*
