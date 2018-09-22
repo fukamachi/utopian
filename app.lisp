@@ -6,10 +6,10 @@
   (:import-from #:utopian/context
                 #:*request*
                 #:*response*)
-  (:import-from #:utopian/errors
+  (:import-from #:utopian/exceptions
                 #:throw-code
-                #:http-error
-                #:http-error-code
+                #:http-exception
+                #:http-exception-code
                 #:http-redirect
                 #:http-redirect-to
                 #:http-redirect-code)
@@ -29,9 +29,13 @@
                 #:make-request)
   (:import-from #:lsx)
   (:import-from #:myway)
+  (:import-from #:sanitized-params
+                #:validation-error)
   (:import-from #:closer-mop)
   (:export #:application
-           #:defapp))
+           #:defapp
+           #:on-exception
+           #:on-validation-error))
 (in-package #:utopian/app)
 
 (defclass application (lack-component)
@@ -69,13 +73,18 @@
   (let ((*request* (make-request env))
         (*response* (make-response 200 ())))
     (handler-case (call-next-method)
-      (http-error (e)
+      (http-exception (e)
         (setf (response-status *response*)
-              (http-error-code e))
-        ;; TODO: custom error handler
+              (http-exception-code e))
         (setf (response-body *response*)
-              (princ-to-string e))
+              (or (on-exception app e)
+                  (princ-to-string e)))
         (finalize-response *response*))
+      (validation-error (e)
+        (setf (response-status *response*) 400)
+        (setf (response-body *response*)
+              (or (on-validation-error app e)
+                  "Invalid parameters")))
       (http-redirect (c)
         (let ((to (http-redirect-to c))
               (code (http-redirect-code c)))
@@ -83,6 +92,14 @@
           (setf (response-status *response*) code)
           (setf (response-body *response*) to))
         (finalize-response *response*)))))
+
+(defgeneric on-exception (app exception)
+  (:method ((app application) (exception http-exception))
+    nil))
+
+(defgeneric on-validation-error (app error)
+  (:method ((app application) (error error))
+    nil))
 
 (defclass utopian-app-class (standard-class)
   ((base-directory :initarg :base-directory

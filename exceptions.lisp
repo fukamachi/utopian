@@ -1,13 +1,13 @@
-(defpackage #:utopian/errors
+(defpackage #:utopian/exceptions
   (:use #:cl)
-  (:export #:http-error
+  (:export #:http-exception
            #:http-redirect
-           #:http-error-code
+           #:http-exception-code
            #:http-redirect-to
            #:http-redirect-code
            #:throw-code
            #:redirect-to))
-(in-package #:utopian/errors)
+(in-package #:utopian/exceptions)
 
 (defparameter *http-status*
   (loop with status = (make-hash-table :test #'eql)
@@ -59,9 +59,9 @@
 (defun http-status-reason (code)
   (gethash code *http-status*))
 
-(define-condition http-error (error)
+(define-condition http-exception (error)
   ((code :initarg :code
-         :reader http-error-code))
+         :reader http-exception-code))
   (:report
    (lambda (condition stream)
      (with-slots (code) condition
@@ -78,7 +78,7 @@
          :reader http-redirect-code)))
 
 (defun throw-code (code)
-  (error 'http-error :code code))
+  (error 'http-exception :code code))
 
 (defun redirect-to (url &optional (code 302))
   (error 'http-redirect :to url :code code))
