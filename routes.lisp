@@ -3,12 +3,19 @@
   (:import-from #:utopian/context
                 #:*request*
                 #:*response*)
-  (:import-from #:myway)
+  (:import-from #:myway
+                #:make-mapper
+                #:clear-routes
+                #:connect
+                #:next-route)
   (:import-from #:lack.request
                 #:request-parameters)
   (:export #:defroute
            #:render
-           #:defroutes))
+           #:defroutes
+
+           ;; from MyWay
+           #:next-route))
 (in-package #:utopian/routes)
 
 (defvar *current-action*)
