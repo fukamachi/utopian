@@ -20,13 +20,11 @@
                 #:to-app
                 #:call)
   (:import-from #:lack.response
-                #:make-response
                 #:response-body
                 #:response-headers
                 #:response-status
                 #:finalize-response)
-  (:import-from #:lack.request
-                #:make-request)
+  (:import-from #:lack.request)
   (:import-from #:lsx)
   (:import-from #:myway)
   (:import-from #:sanitized-params
@@ -34,6 +32,8 @@
   (:import-from #:closer-mop)
   (:export #:application
            #:defapp
+           #:make-request
+           #:make-response
            #:on-exception
            #:on-validation-error))
 (in-package #:utopian/app)
@@ -70,8 +70,8 @@
         (throw-code 404))))
 
 (defmethod call :around ((app application) env)
-  (let ((*request* (make-request env))
-        (*response* (make-response 200 ())))
+  (let ((*request* (make-request app env))
+        (*response* (make-response app 200 ())))
     (handler-case (call-next-method)
       (http-exception (e)
         (setf (response-status *response*)
@@ -92,6 +92,15 @@
           (setf (response-status *response*) code)
           (setf (response-body *response*) to))
         (finalize-response *response*)))))
+
+(defgeneric make-request (app env)
+  (:method (app env)
+    (declare (ignore app))
+    (lack.request:make-request env)))
+
+(defgeneric make-response (app &optional status headers body)
+  (:method (app &optional status headers body)
+    (lack.response:make-response status headers body)))
 
 (defgeneric on-exception (app exception)
   (:method ((app application) (exception http-exception))
