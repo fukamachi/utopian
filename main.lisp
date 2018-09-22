@@ -2,8 +2,9 @@
   (:nicknames #:utopian/main)
   (:use #:cl)
   (:use-reexport #:utopian/model
-                 #:utopian/route
+                 #:utopian/routes
                  #:utopian/app
-                 #:utopian/config)
+                 #:utopian/config
+                 #:utopian/context)
   (:import-from #:utopian/tasks))
 (in-package #:utopian)

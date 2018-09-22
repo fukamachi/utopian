@@ -18,9 +18,5 @@
 (defmethod to-app ((app blog-app))
   (builder
    :session
-   (lambda (app)
-     (lambda (env)
-       (let* ((db-config (config :database))
-              (mito:*connection* (and db-config (apply #'dbi:connect-cached db-config))))
-         (funcall app env))))
+   (:mito (config :database))
    (call-next-method)))
