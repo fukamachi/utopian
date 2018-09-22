@@ -11,7 +11,7 @@
   (:render
    <html>
      <head>
-       <title>Index \| Myblog</title>
+       <title>Index - Myblog</title>
      </head>
      <body>
        <h1>Welcome</h1>

@@ -13,7 +13,7 @@
   (:render
    <html>
      <head>
-       <title>Entries \| Myblog</title>
+       <title>Entries - Myblog</title>
      </head>
      <body>
        <h1>Entries</h1>
@@ -35,7 +35,7 @@
    <html>
      <head>
        <title>
-         {(entry-title entry)} \| Myblog
+         {(entry-title entry)} - Myblog
        </title>
      </head>
      <body>

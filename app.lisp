@@ -22,6 +22,7 @@
   (:import-from #:lack.response
                 #:make-response
                 #:response-body
+                #:response-headers
                 #:response-status
                 #:finalize-response)
   (:import-from #:lack.request
@@ -65,8 +66,8 @@
         (throw-code 404))))
 
 (defmethod call :around ((app application) env)
-  (let ((*request* (make-request app env))
-        (*response* (make-response app 200 ())))
+  (let ((*request* (make-request env))
+        (*response* (make-response 200 ())))
     (handler-case (call-next-method)
       (http-error (e)
         (setf (response-status *response*)
