@@ -1,6 +1,6 @@
 (defpackage #:myblog/app
   (:use #:cl
-        #:myblog/controllers
+        #:myblog/config/routes
         #:myblog/config/application))
 (in-package #:myblog/app)
 
