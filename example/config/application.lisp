@@ -7,6 +7,7 @@
   (:import-from #:lack
                 #:builder)
   (:import-from #:mito)
+  (:import-from #:cl-ppcre)
   (:import-from #:dbi)
   (:export #:blog-app))
 (in-package #:myblog/config/application)
@@ -17,6 +18,13 @@
 
 (defmethod to-app ((app blog-app))
   (builder
-   :session
+   (:static
+    :path (lambda (path)
+            (if (ppcre:scan "^(?:/assets/|/robot\\.txt$|/favicon\\.ico$)" path)
+                path
+                nil))
+    :root (asdf:system-relative-pathname :myblog #P"public/"))
+   :accesslog
    (:mito (config :database))
+   :session
    (call-next-method)))
