@@ -5,6 +5,7 @@
                  #:utopian/routes
                  #:utopian/app
                  #:utopian/config
-                 #:utopian/context)
+                 #:utopian/context
+                 #:utopian/errors)
   (:import-from #:utopian/tasks))
 (in-package #:utopian)

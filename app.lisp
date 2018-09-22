@@ -6,6 +6,13 @@
   (:import-from #:utopian/context
                 #:*request*
                 #:*response*)
+  (:import-from #:utopian/errors
+                #:throw-code
+                #:http-error
+                #:http-error-code
+                #:http-redirect
+                #:http-redirect-to
+                #:http-redirect-code)
   (:import-from #:lack
                 #:builder)
   (:import-from #:lack.component
@@ -14,6 +21,7 @@
                 #:call)
   (:import-from #:lack.response
                 #:response-body
+                #:response-status
                 #:finalize-response)
   (:import-from #:lack.request)
   (:import-from #:lsx)
@@ -51,20 +59,37 @@
     (lack.response:make-response status headers)))
 
 (defmethod call ((app application) env)
+  (multiple-value-bind (res foundp)
+      (myway:dispatch (slot-value app 'routes)
+                      (getf env :path-info)
+                      :method (getf env :request-method))
+    (if foundp
+        (progn
+          (setf (response-body *response*)
+                (if (typep res '(or string list vector pathname))
+                    res
+                    (lsx:render-object res nil)))
+          (finalize-response *response*))
+        (throw-code 404))))
+
+(defmethod call :around ((app application) env)
   (let ((*request* (make-request app env))
         (*response* (make-response app 200 ())))
-    (multiple-value-bind (res foundp)
-        (myway:dispatch (slot-value app 'routes)
-                        (getf env :path-info)
-                        :method (getf env :request-method))
-      (if foundp
-          (progn
-            (setf (response-body *response*)
-                  (if (typep res '(or string list vector pathname))
-                      res
-                      (lsx:render-object res nil)))
-            (finalize-response *response*))
-          '(404 () ("not found"))))))
+    (handler-case (call-next-method)
+      (http-error (e)
+        (setf (response-status *response*)
+              (http-error-code e))
+        ;; TODO: custom error handler
+        (setf (response-body *response*)
+              (princ-to-string e))
+        (finalize-response *response*))
+      (http-redirect (c)
+        (let ((to (http-redirect-to c))
+              (code (http-redirect-code c)))
+          (setf (getf (response-headers *response*) :location) to)
+          (setf (response-status *response*) code)
+          (setf (response-body *response*) to))
+        (finalize-response *response*)))))
 
 (defclass utopian-app-class (standard-class)
   ((config :initarg :config
