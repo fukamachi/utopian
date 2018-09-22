@@ -71,7 +71,7 @@
 
 (defmethod call :around ((app application) env)
   (let ((*request* (make-request app env))
-        (*response* (make-response app 200 ())))
+        (*response* (make-response app 200)))
     (handler-case (call-next-method)
       (http-exception (e)
         (setf (response-status *response*)
@@ -93,6 +93,12 @@
           (setf (response-body *response*) to))
         (finalize-response *response*)))))
 
+(defvar *default-headers*
+  '(:content-type "text/html"
+    :x-content-type-options "nosniff"
+    :x-frame-options "DENY"
+    :cache-control "private"))
+
 (defgeneric make-request (app env)
   (:method (app env)
     (declare (ignore app))
@@ -100,7 +106,9 @@
 
 (defgeneric make-response (app &optional status headers body)
   (:method (app &optional status headers body)
-    (lack.response:make-response status headers body)))
+    (lack.response:make-response status
+                                 (append *default-headers* headers)
+                                 body)))
 
 (defgeneric on-exception (app exception)
   (:method ((app application) (exception http-exception))
