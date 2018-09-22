@@ -79,9 +79,9 @@
                   (setf *controllers-directory*
                         (uiop:ensure-directory-pathname
                          (merge-pathnames directory *controllers-directory*)))))))
-    `(progn
+    `(let ((*controllers-directory* ,*controllers-directory*))
        (defvar ,name (myway:make-mapper))
-       ;; TODO: clear rules
+       (myway:clear-routes ,name)
        ,@(loop for (method rule controller) in routing-rules
                collect `(myway:connect ,name ,rule (parse-controller-rule ,controller)
                                        :method ,method))
