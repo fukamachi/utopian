@@ -20,16 +20,16 @@
                 #:to-app
                 #:call)
   (:import-from #:lack.response
+                #:make-response
                 #:response-body
                 #:response-status
                 #:finalize-response)
-  (:import-from #:lack.request)
+  (:import-from #:lack.request
+                #:make-request)
   (:import-from #:lsx)
   (:import-from #:myway)
   (:import-from #:closer-mop)
   (:export #:application
-           #:make-request
-           #:make-response
            #:defapp))
 (in-package #:utopian/app)
 
@@ -49,14 +49,6 @@
          (let ((*config-dir* config-dir))
            (funcall app env))))
      (call-next-method))))
-
-(defgeneric make-request (application env)
-  (:method ((app application) env)
-    (lack.request:make-request env)))
-
-(defgeneric make-response (application status headers)
-  (:method ((app application) status headers)
-    (lack.response:make-response status headers)))
 
 (defmethod call ((app application) env)
   (multiple-value-bind (res foundp)
