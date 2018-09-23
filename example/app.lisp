@@ -5,4 +5,5 @@
 (in-package #:myblog/app)
 
 (make-instance 'blog-app
-               :routes *routes*)
+               :routes *routes*
+               :models #P"models/")

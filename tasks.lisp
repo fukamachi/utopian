@@ -4,7 +4,8 @@
                 #:config
                 #:appenv)
   (:import-from #:utopian/app
-                #:with-config)
+                #:with-config
+                #:load-models)
   (:import-from #:clack
                 #:clackup)
   (:export #:db-connect
@@ -101,9 +102,10 @@
     (mito:migration-status #P"db/")))
 
 (defun generate-migrations (app)
-  (with-connection (db-connect app)
-    ;; TODO: load models
-    (mito:generate-migrations #P"db/")))
+  (let ((app (load-app app)))
+    (with-connection (db-connect app)
+      (load-models app)
+      (mito:generate-migrations #P"db/"))))
 
 (defun server (app)
   (clack:clackup app :use-thread nil))

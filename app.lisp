@@ -15,6 +15,8 @@
                 #:http-redirect
                 #:http-redirect-to
                 #:http-redirect-code)
+  (:import-from #:utopian/utils
+                #:load-file)
   (:import-from #:lack
                 #:builder)
   (:import-from #:lack.component
@@ -41,7 +43,11 @@
 (in-package #:utopian/app)
 
 (defclass application (lack-component)
-  ((routes :initarg :routes)))
+  ((routes :initarg :routes
+           :accessor application-routes)
+   (models :initarg :models
+           :initform nil
+           :accessor application-models)))
 
 (defmacro with-config ((app) &body body)
   `(let ((*config-dir* (slot-value (class-of ,app) 'config)))
@@ -94,6 +100,19 @@
           (setf (response-status *response*) code)
           (setf (response-body *response*) to))
         (finalize-response *response*)))))
+
+(defun load-models (app)
+  (let ((models (application-models app)))
+    (when models
+      (labels ((directory-models (dir)
+                 (append
+                  (uiop:directory-files dir "*.lisp")
+                  (mapcan #'directory-models (uiop:subdirectories dir)))))
+        (dolist (model-file (directory-models models))
+          (load-file model-file))))))
+
+(defmethod to-app :before ((app application))
+  (load-models app))
 
 (defvar *default-headers*
   '(:content-type "text/html"
