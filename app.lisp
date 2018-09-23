@@ -1,5 +1,7 @@
 (defpackage #:utopian/app
   (:use #:cl)
+  (:import-from #:utopian/routes
+                #:routes-mapper)
   (:import-from #:utopian/config
                 #:*config-dir*
                 #:config)
@@ -57,7 +59,7 @@
 
 (defmethod call ((app application) env)
   (multiple-value-bind (res foundp)
-      (myway:dispatch (slot-value app 'routes)
+      (myway:dispatch (routes-mapper (slot-value app 'routes))
                       (getf env :path-info)
                       :method (getf env :request-method))
     (if foundp

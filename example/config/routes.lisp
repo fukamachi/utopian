@@ -5,7 +5,8 @@
 (in-package #:myblog/config/routes)
 
 (defroutes *routes*
-  ((:GET "/" "root:index")
-   (:GET "/entries" "entries:listing")
-   (:GET "/entries/:id" "entries:show"))
-  (:directory #P"../controllers/"))
+  (:controllers #P"../controllers/"))
+
+(route :GET "/" "root:index")
+(route :GET "/entries" "entries:listing")
+(route :GET "/entries/:id" "entries:show")
