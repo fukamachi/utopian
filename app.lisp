@@ -31,7 +31,6 @@
                 #:response-status
                 #:finalize-response)
   (:import-from #:lack.request)
-  (:import-from #:lsx)
   (:import-from #:myway)
   (:import-from #:sanitized-params
                 #:validation-error)
@@ -77,10 +76,7 @@
                       :method (getf env :request-method))
     (if foundp
         (progn
-          (setf (response-body *response*)
-                (if (typep res '(or string list vector pathname))
-                    res
-                    (lsx:render-object res nil)))
+          (setf (response-body *response*) res)
           (finalize-response *response*))
         (throw-code 404))))
 
@@ -122,8 +118,7 @@
   (load-models app))
 
 (defvar *default-headers*
-  '(:content-type "text/html"
-    :x-content-type-options "nosniff"
+  '(:x-content-type-options "nosniff"
     :x-frame-options "DENY"
     :cache-control "private"))
 

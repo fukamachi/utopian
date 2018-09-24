@@ -1,14 +1,15 @@
 (defpackage #:myblog/views/entries
   (:use #:cl
         #:lsx
-        #:myblog/models)
+        #:myblog/models
+        #:utopian)
   (:export #:listing
            #:show))
 (in-package #:myblog/views/entries)
 
 (lsx:enable-lsx-syntax)
 
-(defcomponent listing ()
+(defview listing ()
   (entries)
   (:render
    <html>
@@ -29,7 +30,7 @@
      </body>
    </html>))
 
-(defcomponent show ()
+(defview show ()
   (entry)
   (:render
    <html>

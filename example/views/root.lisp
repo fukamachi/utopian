@@ -1,12 +1,13 @@
 (defpackage #:myblog/views/root
   (:use #:cl
-        #:lsx)
+        #:lsx
+        #:utopian)
   (:export #:index))
 (in-package #:myblog/views/root)
 
 (lsx:enable-lsx-syntax)
 
-(defcomponent index ()
+(defview index ()
   ()
   (:render
    <html>
