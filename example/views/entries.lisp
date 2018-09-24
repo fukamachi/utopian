@@ -1,7 +1,7 @@
 (defpackage #:myblog/views/entries
   (:use #:cl
         #:lsx
-        #:myblog/models
+        #:myblog/models/entry
         #:utopian)
   (:export #:listing-page
            #:show-page))

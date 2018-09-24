@@ -2,7 +2,7 @@
   (:use #:cl
         #:utopian
         #:myblog/views/entries
-        #:myblog/models)
+        #:myblog/models/entry)
   (:import-from #:assoc-utils
                 #:aget)
   (:export #:listing
