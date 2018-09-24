@@ -8,6 +8,7 @@
                 #:load-models)
   (:import-from #:utopian/file-loader
                 #:eval-file)
+  (:import-from #:mito)
   (:import-from #:clack
                 #:clackup)
   (:export #:db-connect
