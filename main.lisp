@@ -1,8 +1,7 @@
 (uiop:define-package #:utopian
   (:nicknames #:utopian/main)
   (:use #:cl)
-  (:mix-reexport #:utopian/model
-                 #:utopian/routes
+  (:mix-reexport #:utopian/routes
                  #:utopian/views
                  #:utopian/context
                  #:utopian/app

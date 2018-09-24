@@ -1,9 +1,9 @@
 (defpackage #:myblog/models/entry
   (:use #:cl
-        #:utopian)
+        #:mito)
   (:export #:entry
            #:entry-title))
 (in-package #:myblog/models/entry)
 
-(defmodel entry ()
+(deftable entry ()
   ((title :col-type :text)))
