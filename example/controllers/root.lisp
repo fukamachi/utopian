@@ -5,5 +5,6 @@
   (:export #:index))
 (in-package #:myblog/controllers/root)
 
-(defroute index ()
+(defun index (params)
+  (declare (ignore params))
   (render 'index-page))

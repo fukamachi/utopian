@@ -11,8 +11,7 @@
                 #:next-route)
   (:import-from #:lack.request
                 #:request-parameters)
-  (:export #:defroute
-           #:defroutes
+  (:export #:defroutes
            #:routes
            #:routes-mapper
            #:routes-controllers-directory
@@ -23,19 +22,9 @@
            #:next-route))
 (in-package #:utopian/routes)
 
-(defvar *current-route*)
-
-(defmacro defroute (name lambda-list &body body)
-  (let ((params (gensym "PARAMS")))
-    `(defun ,name ,(or lambda-list `(,params))
-       ,@(unless lambda-list
-           `((declare (ignore ,params))))
-       (let ((*current-route* ',name))
-         ,@body))))
-
 (defvar *controllers-directory*)
 
-(defun make-controller (action &optional controller-rule)
+(defun make-controller (action)
   (lambda (params)
     (funcall action
              (append (loop for (k v) on params by #'cddr
@@ -46,8 +35,7 @@
   (etypecase rule
     ((or function symbol) (make-controller rule))
     (string
-     (let ((action (symbol-function (intern-rule rule *controllers-directory*))))
-       (make-controller action rule)))))
+     (make-controller (symbol-function (intern-rule rule *controllers-directory*))))))
 
 (defvar *package-routes* (make-hash-table :test 'eq))
 

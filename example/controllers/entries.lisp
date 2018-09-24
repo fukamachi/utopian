@@ -9,11 +9,12 @@
            #:show))
 (in-package #:myblog/controllers/entries)
 
-(defroute listing ()
+(defun listing (params)
+  (declare (ignore params))
   (render 'listing-page
           :entries (mito:select-dao 'entry)))
 
-(defroute show (params)
+(defun show (params)
   (let ((entry (mito:find-dao 'entry :id (aget params :id))))
     (unless entry
       (throw-code 404))
