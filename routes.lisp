@@ -16,7 +16,6 @@
            #:routes-mapper
            #:routes-controllers-directory
            #:route
-           #:mount
 
            ;; from MyWay
            #:next-route))
@@ -79,8 +78,3 @@
                    (let ((*controllers-directory* (routes-controllers-directory routes)))
                      (parse-controller-rule controller))
                    :method method)))
-
-(defun mount (mount-path routes)
-  (declare (ignore mount-path routes))
-  ;; TODO
-  (error "Not implemented yet"))
