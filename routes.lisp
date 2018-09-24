@@ -44,7 +44,7 @@
    (mapper :initarg :mapper
            :reader routes-mapper)))
 
-(defmacro defroutes (name &rest options)
+(defmacro defroutes (name routing-rules &rest options)
   (let ((controllers-directory
           (uiop:pathname-directory-pathname (or *compile-file-pathname* *load-pathname*))))
     (loop for option in options
@@ -60,6 +60,8 @@
                                     :mapper (myway:make-mapper)))
        (setf (slot-value ,name 'mapper) (myway:make-mapper))
        (setf (package-routes) ,name)
+       ,@(loop for rule in routing-rules
+               collect `(route ,@rule))
        ,name)))
 
 (defun package-routes (&optional (package *package*))

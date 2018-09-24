@@ -4,7 +4,7 @@
   (:export #:*routes*))
 (in-package #:myblog/config/routes)
 
-(defroutes *routes*
+(defroutes *routes* ()
   (:controllers #P"../controllers/"))
 
 (route :GET "/" "root:index")
