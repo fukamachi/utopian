@@ -3,6 +3,8 @@
   (:import-from #:utopian/context
                 #:*request*
                 #:*response*)
+  (:import-from #:utopian/file-loader
+                #:intern-rule)
   (:import-from #:myway
                 #:make-mapper
                 #:connect
@@ -40,16 +42,6 @@
 
 (defvar *controllers-directory*)
 
-(defun load-file (file)
-  (let ((package-form
-          (asdf/package-inferred-system::file-defpackage-form file)))
-    (if package-form
-        #+quicklisp
-        (ql:quickload (second package-form))
-        #-quicklisp
-        (asdf:load-system (second package-form))
-        (load file))))
-
 (defun make-controller (action)
   (lambda (params)
     (funcall action
@@ -61,24 +53,8 @@
   (etypecase rule
     ((or function symbol) (make-controller rule))
     (string
-     (destructuring-bind (controller-name action-name)
-         (ppcre:split "::?" rule)
-       (let ((file
-               (make-pathname :name controller-name
-                              :type "lisp"
-                              :defaults *controllers-directory*)))
-         (let ((package-name (second (asdf/package-inferred-system::file-defpackage-form file))))
-           (unless package-name
-             (error "File '~A' is not a package inferred system." file))
-           #+quicklisp
-           (ql:quickload package-name :silent t)
-           #-quicklisp
-           (asdf:load-system package-name)
-           (let ((package (find-package package-name)))
-             (unless package
-               (error "No package '~A' in '~A'" package-name file))
-             (let ((action (symbol-function (intern (string-upcase action-name) package))))
-               (make-controller action)))))))))
+     (let ((action (symbol-function (intern-rule rule *controllers-directory*))))
+       (make-controller action)))))
 
 (defvar *package-routes* (make-hash-table :test 'eq))
 

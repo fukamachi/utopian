@@ -15,7 +15,7 @@
                 #:http-redirect
                 #:http-redirect-to
                 #:http-redirect-code)
-  (:import-from #:utopian/utils
+  (:import-from #:utopian/file-loader
                 #:load-file)
   (:import-from #:lack
                 #:builder)

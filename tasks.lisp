@@ -6,6 +6,8 @@
   (:import-from #:utopian/app
                 #:with-config
                 #:load-models)
+  (:import-from #:utopian/file-loader
+                #:eval-file)
   (:import-from #:clack
                 #:clackup)
   (:export #:db-connect
@@ -21,7 +23,7 @@
 
 (defun load-app (app)
   (if (pathnamep app)
-      (clack::eval-file app)
+      (eval-file app)
       app))
 
 (defmacro with-connection (conn &body body)
