@@ -1,7 +1,6 @@
 (defpackage #:myblog/controllers/root
   (:use #:cl
-        #:utopian
-        #:myblog/views/root)
+        #:utopian)
   (:export #:index))
 (in-package #:myblog/controllers/root)
 

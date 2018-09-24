@@ -2,6 +2,8 @@
   (:use #:cl)
   (:import-from #:utopian/routes
                 #:routes-mapper)
+  (:import-from #:utopian/views
+                #:*views-directory*)
   (:import-from #:utopian/config
                 #:*config-dir*
                 #:config)
@@ -47,7 +49,10 @@
            :accessor application-routes)
    (models :initarg :models
            :initform nil
-           :accessor application-models)))
+           :accessor application-models)
+   (views :initarg :views
+          :initform nil
+          :accessor application-views)))
 
 (defmacro with-config ((app) &body body)
   `(let ((*config-dir* (slot-value (class-of ,app) 'config)))
@@ -55,11 +60,13 @@
 
 (defmethod to-app :around ((app application))
   (let* ((config-dir (slot-value (class-of app) 'config))
-         (*config-dir* config-dir))
+         (*config-dir* config-dir)
+         (views-dir (application-views app)))
     (builder
      (lambda (app)
        (lambda (env)
-         (let ((*config-dir* config-dir))
+         (let ((*config-dir* config-dir)
+               (*views-directory* views-dir))
            (funcall app env))))
      (call-next-method))))
 

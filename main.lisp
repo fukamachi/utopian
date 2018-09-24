@@ -3,6 +3,7 @@
   (:use #:cl)
   (:mix-reexport #:utopian/model
                  #:utopian/routes
+                 #:utopian/views
                  #:utopian/context
                  #:utopian/app
                  #:utopian/config

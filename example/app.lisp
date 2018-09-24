@@ -6,4 +6,5 @@
 
 (make-instance 'blog-app
                :routes *routes*
-               :models #P"models/")
+               :models #P"models/"
+               :views #P"views/")

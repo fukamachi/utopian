@@ -1,7 +1,6 @@
 (defpackage #:myblog/controllers/entries
   (:use #:cl
         #:utopian
-        #:myblog/views/entries
         #:myblog/models)
   (:import-from #:assoc-utils
                 #:aget)
