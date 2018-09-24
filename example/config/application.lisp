@@ -6,9 +6,7 @@
                 #:call)
   (:import-from #:lack
                 #:builder)
-  (:import-from #:mito)
   (:import-from #:cl-ppcre)
-  (:import-from #:dbi)
   (:export #:blog-app))
 (in-package #:myblog/config/application)
 
