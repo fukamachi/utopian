@@ -3,13 +3,13 @@
         #:lsx
         #:myblog/models
         #:utopian)
-  (:export #:listing
-           #:show))
+  (:export #:listing-page
+           #:show-page))
 (in-package #:myblog/views/entries)
 
 (lsx:enable-lsx-syntax)
 
-(defview listing ()
+(defview listing-page ()
   (entries)
   (:render
    <html>
@@ -30,7 +30,7 @@
      </body>
    </html>))
 
-(defview show ()
+(defview show-page ()
   (entry)
   (:render
    <html>

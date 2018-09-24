@@ -1,7 +1,5 @@
 (defpackage #:utopian/views
   (:use #:cl)
-  (:import-from #:utopian/routes
-                #:*current-route*)
   (:import-from #:utopian/context
                 #:*response*
                 #:response-headers)
@@ -34,15 +32,8 @@
 (defmethod c2mop:validate-superclass ((class utopian-view-class) (super standard-class))
   t)
 
-(defvar *views-directory*)
-
-(defun render (&rest view-args)
-  (let* ((view (if (and view-args
-                        (not (keywordp (first view-args))))
-                   (apply #'make-instance view-args)
-                   (apply #'make-instance
-                          (intern-rule *current-route* *views-directory*)
-                          view-args)))
+(defun render (view-class &rest view-args)
+  (let* ((view (apply #'make-instance view-class view-args))
          (view-class (class-of view))
          (content-type (view-content-type view-class)))
     (when content-type

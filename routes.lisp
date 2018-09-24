@@ -30,17 +30,17 @@
     `(defun ,name ,(or lambda-list `(,params))
        ,@(unless lambda-list
            `((declare (ignore ,params))))
-       ,@body)))
+       (let ((*current-route* ',name))
+         ,@body))))
 
 (defvar *controllers-directory*)
 
 (defun make-controller (action &optional controller-rule)
   (lambda (params)
-    (let ((*current-route* controller-rule))
-      (funcall action
-               (append (loop for (k v) on params by #'cddr
-                             collect (cons k v))
-                       (request-parameters *request*))))))
+    (funcall action
+             (append (loop for (k v) on params by #'cddr
+                           collect (cons k v))
+                     (request-parameters *request*)))))
 
 (defun parse-controller-rule (rule)
   (etypecase rule

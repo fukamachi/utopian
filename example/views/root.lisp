@@ -2,12 +2,12 @@
   (:use #:cl
         #:lsx
         #:utopian)
-  (:export #:index))
+  (:export #:index-page))
 (in-package #:myblog/views/root)
 
 (lsx:enable-lsx-syntax)
 
-(defview index ()
+(defview index-page ()
   ()
   (:render
    <html>
