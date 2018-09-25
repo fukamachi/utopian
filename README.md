@@ -1,50 +1,43 @@
 # Utopian
 
-## Usage
+[![Quicklisp dist](http://quickdocs.org/badge/utopian.svg)](http://quickdocs.org/utopian/)
 
-```common-lisp
-(defmodel entry ()
-  ((title :col-type :text)))
+> The caveman in offering the first garland to his maiden thereby transcended the brute. He became a utopian in thus rising above the crude necessities of nature. He entered the realm of art when he perceived the subtle use of the useless.
+> -- Okakura Tenshin, "The Book of Tea"
 
-(defview index ()
-  ()
-  (:render
-    (html
-      (head
-        (title "Index"))
-      (body
-        (h1 "Welcome")
-        (a (:href "/entries") "Show Entries")))))
+3 steps to write a better web application:
 
-(defview entries ()
-  (entries)
-  (:render
-    (html
-      (head
-        (title "Entries"))
-      (body
-        (h1 "Entries")
-        (ul
-         (mapcar (lambda (entry)
-                   (li
-                    (a (:href #?"/entries/${(object-id entry)}")
-                       (entry-title entry))))
-                 entries))))))
+1. Choose the right language.
+2. Choose the right web framework.
+3. Write less.
 
-(defroute index ()
-  (render))
+Utopian is a web application framework for encouraging rapid web development.
 
-(defroute entries ()
-  (render :entries (select-dao 'entry)))
+## Requirements
 
-(defroute entry (params)
-  (render :entry (find-dao 'entry :id (aget params :id))))
+* [Roswell](https://github.com/roswell/roswell)
+* [Qlot](https://github.com/fukamachi/qlot)
+* An RDBMS you like one of SQLite3, MySQL or PostgreSQL.
 
-(defapp blog-app
-  ((:GET "/" #'index)
-   (:GET "/entries" #'entries)
-   (:GET "/entries/:id" #'entry))
-  (:config #P"config/environments/"))
+## Examples
 
-(clackup blog-app)
-```
+See [examples/](./examples/) directory.
+
+## See Also
+
+- [Clack](https://github.com/fukamachi/clack) / [Lack](https://github.com/fukamachi/lack)
+- [MyWay](https://github.com/fukamachi/myway: Sinatra-compatible router.
+- [Mito]: An O/R Mapper with schema versioning.
+- [LSX]: Embeddable HTML Templating engine.
+
+## Author
+
+Eitaro Fukamachi (e.arrows@gmail.com)
+
+## Copyright
+
+Copyright (c) 2016-2018 Eitaro Fukamachi
+
+## License
+
+Licensed under the LLGPL License.
