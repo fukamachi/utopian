@@ -26,9 +26,9 @@ See [examples/](https://github.com/fukamachi/utopian/tree/next/example) director
 ## See Also
 
 - [Clack](https://github.com/fukamachi/clack) / [Lack](https://github.com/fukamachi/lack)
-- [MyWay](https://github.com/fukamachi/myway: Sinatra-compatible router.
-- [Mito]: An O/R Mapper with schema versioning.
-- [LSX]: Embeddable HTML Templating engine.
+- [MyWay](https://github.com/fukamachi/myway): Sinatra-compatible router.
+- [Mito](https://github.com/fukamachi/mito): An O/R Mapper with schema versioning.
+- [LSX](https://github.com/fukamachi/lsx): Embeddable HTML Templating engine.
 
 ## Author
 
