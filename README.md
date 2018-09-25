@@ -21,7 +21,7 @@ Utopian is a web application framework for encouraging rapid web development.
 
 ## Examples
 
-See [examples/](./examples/) directory.
+See [examples/](https://github.com/fukamachi/utopian/tree/next/example) directory.
 
 ## See Also
 
