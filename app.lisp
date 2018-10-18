@@ -1,6 +1,8 @@
 (defpackage #:utopian/app
   (:use #:cl)
   (:import-from #:utopian/project
+                #:*project-name*
+                #:*project-root*
                 #:project-name
                 #:project-root)
   (:import-from #:utopian/utils
@@ -132,7 +134,9 @@
           (lambda (params)
             (let ((*action* identifier)
                   (*exception-class* exception-class)
-                  (*app* app))
+                  (*app* app)
+                  (*project-root* (app-root app))
+                  (*project-name* (app-name app)))
               (funcall fn (caveman2.nested-parameter:parse-parameters params)))))))
 
 (defun canonicalize-method (method)
