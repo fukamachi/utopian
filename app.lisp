@@ -74,7 +74,13 @@
         (throw-code 404))))
 
 (defmethod call :around ((app application) env)
-  (let ((*request* (make-request app env))
+  (let ((*request*
+          ;; Handle errors mainly while parsing an HTTP request
+          ;;   for preventing from 500 ISE.
+          (handler-case (make-request app env)
+            (error (e)
+              (warn "~A" e)
+              (return-from call '(400 () ("Bad Request"))))))
         (*response* (make-response app 200)))
     (handler-case (call-next-method)
       (http-exception (e)
