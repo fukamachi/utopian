@@ -30,7 +30,7 @@
                 #:finalize-response)
   (:import-from #:lack.request)
   (:import-from #:myway)
-  (:import-from #:sanitized-params
+  (:import-from #:safety-params
                 #:validation-error)
   (:import-from #:closer-mop)
   (:export #:application
