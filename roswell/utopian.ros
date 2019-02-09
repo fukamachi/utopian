@@ -1,0 +1,46 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  (ql:quickload '#:utopian/errors :silent t))
+
+(defpackage #:ros.script.utopian.3758684578
+  (:use #:cl)
+  (:import-from #:utopian/errors
+                #:invalid-arguments
+                #:simple-task-error))
+(in-package #:ros.script.utopian.3758684578)
+
+(defun print-usage ()
+  (format *error-output*
+          "~&Usage: ~A COMMAND [ARGS..]
+
+COMMANDS:
+    new [destination]
+        Generate a project skeleton at the 'destination'.
+
+    server
+        Start a development web server.
+"
+          (file-namestring *load-pathname*)))
+
+(defun main (&optional $1 &rest argv)
+  (handler-case
+      (cond
+        ((equal $1 "new")
+         (ql:quickload '#:utopian/cli/new :silent t)
+         (uiop:symbol-call :utopian/cli/new :main (first argv)))
+        ((equal $1 "server")
+         (ql:quickload '#:utopian/cli/server :silent t)
+         (uiop:symbol-call :utopian/cli/server :main))
+        (t
+         (print-usage)
+         (uiop:quit -1)))
+    (invalid-arguments () (uiop:quit -1))
+    (simple-task-error (e)
+      (format *error-output* "~&~A~%" e)
+      (uiop:quit -1))))
+;;; vim: set ft=lisp lisp:

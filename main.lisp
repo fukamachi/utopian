@@ -6,6 +6,5 @@
                  #:utopian/context
                  #:utopian/app
                  #:utopian/config
-                 #:utopian/exceptions)
-  (:import-from #:utopian/tasks))
+                 #:utopian/exceptions))
 (in-package #:utopian)

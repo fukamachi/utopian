@@ -4,7 +4,8 @@
                 #:file
                 #:file-mixin)
   (:import-from #:mystic.template.gitignore
-                #:gitignore-mixin))
+                #:gitignore-mixin)
+  (:export #:standard-project))
 (in-package #:utopian/skeleton)
 
 (defun skeleton-file (file)

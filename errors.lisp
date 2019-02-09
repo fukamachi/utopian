@@ -2,13 +2,20 @@
   (:use #:cl)
   (:export #:utopian-error
            #:utopian-task-error
+           #:simple-task-error
+           #:invalid-arguments
            #:file-not-found
-           #:system-not-found))
+           #:system-not-found
+           #:directory-already-exists))
 (in-package #:utopian/errors)
 
 (define-condition utopian-error (error) ())
 
 (define-condition utopian-task-error (utopian-error) ())
+
+(define-condition simple-task-error (utopian-task-error simple-error) ())
+
+(define-condition invalid-arguments (utopian-task-error) ())
 
 (define-condition file-not-found (utopian-task-error)
   ((file :initarg file))
@@ -22,3 +29,9 @@
              (with-slots (system) condition
                (format stream "System '~A' cannot be located.~%Make sure it's loadable by ASDF."
                        system)))))
+
+(define-condition directory-already-exists (utopian-task-error)
+  ((directory :initarg :directory))
+  (:report (lambda (condition stream)
+             (with-slots (directory) condition
+               (format stream "Directory '~A' already exists." directory)))))
