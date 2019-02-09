@@ -11,7 +11,7 @@
     (unless package
       (error "File '~A' is not a package inferred system." file))
     #+quicklisp
-    (ql:quickload package :silent t)
+    (ql:quickload package)
     #-quicklisp
     (asdf:load-system package)
     package))

@@ -1,5 +1,6 @@
 (defpackage #:utopian/tasks
-  (:use #:cl)
+  (:use #:cl
+        #:utopian/errors)
   (:import-from #:utopian/config
                 #:config
                 #:appenv)
@@ -8,6 +9,8 @@
                 #:load-models)
   (:import-from #:utopian/file-loader
                 #:eval-file)
+  (:import-from #:utopian/skeleton
+                #:standard-project)
   (:import-from #:mito)
   (:import-from #:clack
                 #:clackup)
@@ -19,7 +22,8 @@
            #:migrate
            #:migration-status
            #:generate-migrations
-           #:server))
+           #:server
+           #:new))
 (in-package #:utopian/tasks)
 
 (defun load-app (app)
@@ -110,5 +114,34 @@
       (load-models app)
       (mito:generate-migrations #P"db/"))))
 
-(defun server (app)
-  (clack:clackup app :use-thread nil))
+(defun server (app-file)
+  (check-type app-file pathname)
+  (unless (probe-file app-file)
+    (error 'file-not-found :file app-file))
+  (let ((package-name (second (asdf/package-inferred-system::file-defpackage-form app-file))))
+    (unless (find-package package-name)
+      (handler-case
+          (progn
+            #+quicklisp (ql:quickload package-name)
+            #-quicklisp (asdf:load-system package-name))
+        (#+quicklisp ql:system-not-found
+         #-quicklisp asdf:missing-component ()
+          (error 'system-not-found package-name)))))
+  (clack:clackup app-file :use-thread nil))
+
+(defun new (destination &rest options &key project-name description license author)
+  (declare (ignore description license author))
+  (let* ((destination (uiop:ensure-directory-pathname destination))
+         (project-name (or project-name
+                           (car (last (pathname-directory destination)))))
+         (project-name
+           (map 'string (lambda (char)
+                          (if (char= char #\Space)
+                              #\-
+                              (char-downcase char)))
+                project-name)))
+    (setf (getf options :project-name) project-name)
+    (mystic:render (make-instance 'standard-project)
+                   options
+                   destination)
+    destination))
