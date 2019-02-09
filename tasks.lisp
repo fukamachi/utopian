@@ -21,9 +21,12 @@
           (progn
             #+quicklisp (ql:quickload package-name)
             #-quicklisp (asdf:load-system package-name))
-        (#+quicklisp ql:system-not-found
-         #-quicklisp asdf:missing-component ()
-          (error 'system-not-found :system package-name)))))
+        #+quicklisp
+        (ql:system-not-found (e)
+          (error 'system-not-found :system (ql:system-not-found-name e)))
+        #-quicklisp
+        (asdf:missing-component (e)
+          (error 'system-not-found :system (asdf/find-component:missing-requires e))))))
   (clack:clackup app-file :use-thread nil))
 
 (defun read-new-value (name &optional default)
