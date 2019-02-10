@@ -19,6 +19,32 @@ Utopian is a web application framework for encouraging rapid web development.
 * [Qlot](https://github.com/fukamachi/qlot)
 * An RDBMS you like one of SQLite3, MySQL or PostgreSQL.
 
+## Getting started
+
+### Installation
+
+```
+$ ros install fukamachi/utopian
+$ ros install fukamachi/qlot
+```
+
+Ensure `~/.roswell/bin` is in your shell `$PATH`.
+
+### Creating a new project
+
+To generate the project skeleton, open a terminal and execute this command:
+
+```
+$ utopian new blog
+```
+
+### Installing dependencies
+
+```
+$ cd blog/
+$ qlot install
+```
+
 ## Examples
 
 See [examples/](https://github.com/fukamachi/utopian/tree/next/example) directory.
