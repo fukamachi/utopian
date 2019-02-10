@@ -9,4 +9,5 @@
 (register-system-packages "lack-component" '(#:lack.component))
 (register-system-packages "lack-request" '(#:lack.request))
 (register-system-packages "lack-response" '(#:lack.response))
+(register-system-packages "mystic" '(#:mystic.util))
 (register-system-packages "mystic-file-mixin" '(#:mystic.template.file))

@@ -5,6 +5,7 @@
   (:export #:*config-dir*
            #:environment-config
            #:config
+           #:db-settings
            #:appenv))
 (in-package #:utopian/config)
 
@@ -24,6 +25,9 @@
 
 (defun config (key)
   (getf (environment-config (appenv)) key))
+
+(defun db-settings (&optional (db :maindb))
+  (cdr (assoc db (config :databases))))
 
 (defun appenv ()
   (let ((appenv (uiop:getenv "APP_ENV")))

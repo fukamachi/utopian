@@ -60,7 +60,7 @@
                        ,g-default
                        ,new-value)))))))))
 
-(defun new (destination &rest options &key project-name description license author)
+(defun new (destination &rest options &key project-name description author database license)
   (let ((destination (uiop:ensure-directory-pathname destination)))
     (when (uiop:directory-exists-p destination)
       (error 'directory-already-exists
@@ -76,10 +76,12 @@
       (setf (getf options :project-name) project-name)
       (setf (getf options :description)
             (check-and-ask-for description "Description" ""))
-      (setf (getf options :license)
-            (check-and-ask-for license "License" ""))
       (setf (getf options :author)
             (check-and-ask-for author "Author" ""))
+      (setf (getf options :database)
+            (check-and-ask-for database "Database" "sqlite3"))
+      (setf (getf options :license)
+            (check-and-ask-for license "License" ""))
       (mystic:render (make-instance 'standard-project)
                      options
                      destination)

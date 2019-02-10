@@ -3,6 +3,12 @@
   (:import-from #:mystic.template.file
                 #:file
                 #:file-mixin)
+  (:import-from #:mystic
+                #:render-template
+                #:prompt-option)
+  (:import-from #:mystic.util
+                #:render-string
+                #:write-file)
   (:export #:standard-project))
 (in-package #:utopian/skeleton)
 
@@ -50,22 +56,41 @@
     (make-instance 'mystic:prompt-option
                    :name :author
                    :title "Author")
-    (make-instance 'mystic:option
-                   :name :controller
-                   :default "root")
-    (make-instance 'mystic:option
-                   :name :actions
-                   :default '((:name . "index")
-                              (:last . t))))
-   :files
-   (list*
-    (make-instance 'file
-                   :path "{{project-name}}.asd"
-                   :content (uiop:read-file-string (skeleton-file #P"files/asdf.lisp")))
-    (make-instance 'file
-                   :path "controllers/root.lisp"
-                   :content (uiop:read-file-string (skeleton-file #P"files/controller.lisp")))
-    (make-instance 'file
-                   :path "views/root.lisp"
-                   :content (uiop:read-file-string (skeleton-file #P"files/view.lisp")))
-    (project-files))))
+    (make-instance 'mystic:prompt-option
+                   :name :database
+                   :title "Database"
+                   :default "sqlite3"))
+   :files (project-files)))
+
+(defun normalize-database (value)
+  (check-type value string)
+  (cond
+    ((member value '("sqlite" "sqlite3") :test 'string-equal)
+     "sqlite3")
+    ((member value '("postgres" "postgresql") :test 'string-equal)
+     "postgres")
+    ((member value '("mysql") :test 'string-equal)
+     "mysql")
+    (t (error "Unsupported database: ~S" value))))
+
+(defmethod mystic:render-template progn ((template standard-project) options directory)
+  (declare (type list options)
+           (type pathname directory))
+  (let ((options (append '(:controller "root"
+                           :actions (((:name . "index")
+                                      (:last . t)))
+                           :environment "local")
+                         options)))
+    (flet ((render-and-write (file destination)
+             (let ((file-path (parse-namestring (render-string destination options)))
+                   (content (render-string (uiop:read-file-string (skeleton-file file))
+                                           options)))
+               (write-file content (merge-pathnames file-path directory)))))
+      (render-and-write #P"files/asdf.lisp" "{{project-name}}.asd")
+      (render-and-write #P"files/controller.lisp" "controllers/root.lisp")
+      (render-and-write #P"files/view.lisp" "views/root.lisp")
+      (render-and-write
+       (make-pathname :name (normalize-database (getf options :database))
+                      :type "lisp"
+                      :defaults #P"files/environments/")
+       "config/environments/{{environment}}.lisp"))))

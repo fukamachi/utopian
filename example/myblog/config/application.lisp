@@ -23,6 +23,6 @@
                 nil))
     :root (asdf:system-relative-pathname :myblog #P"public/"))
    :accesslog
-   (:mito (config :database))
+   (:mito (db-settings :maindb))
    :session
    (call-next-method)))

@@ -1,7 +1,7 @@
 (defpackage #:utopian/tasks/db
   (:use #:cl)
   (:import-from #:utopian/config
-                #:config
+                #:db-settings
                 #:appenv)
   (:import-from #:utopian/app
                 #:with-config
@@ -30,9 +30,9 @@
      (unwind-protect (progn ,@body)
        (dbi:disconnect mito:*connection*))))
 
-(defun connect (app)
+(defun connect (app &optional (db :maindb))
   (with-config ((load-app app))
-    (let ((config (config :database)))
+    (let ((config (db-settings db)))
       (unless config
         (error "No database settings. (APP_ENV=~A)" (appenv)))
       (apply #'dbi:connect config))))
@@ -40,7 +40,8 @@
 (defun create (app)
   (let ((mito:*mito-logger-stream* t))
     (with-config ((load-app app))
-      (let* ((config (copy-seq (config :database)))
+      ;; TODO: Create all databases defined, not only :maindb.
+      (let* ((config (copy-seq (db-settings)))
              (db-type (first config))
              (db-name (getf (rest config) :database-name)))
         (setf (getf (cdr config) :database-name)
@@ -64,7 +65,7 @@
 (defun drop (app)
   (let ((mito:*mito-logger-stream* t))
     (with-config ((load-app app))
-      (let* ((config (copy-seq (config :database)))
+      (let* ((config (copy-seq (db-settings)))
              (db-type (first config))
              (db-name (getf (rest config) :database-name)))
         (setf (getf (cdr config) :database-name)
