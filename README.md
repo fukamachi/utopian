@@ -45,6 +45,39 @@ $ cd blog/
 $ qlot install
 ```
 
+### Creating a database
+
+This section is needed only when using with MySQL or PostgreSQL.
+
+#### Creating a database user
+
+##### PostgreSQL
+
+```
+$ createuser -d blog
+```
+
+##### MySQL
+
+```
+$ mysql -u root
+mysql> CREATE USER blog@localhost IDENTIFIED BY '';
+```
+
+#### Creating a database
+
+```
+$ quicklisp/bin/utopian db:create
+```
+
+### Starting a development server
+
+```
+$ quicklisp/bin/utopian server
+Hunchentoot server is going to start.
+Listening on localhost:5000.
+```
+
 ## Examples
 
 See [examples/](https://github.com/fukamachi/utopian/tree/next/example) directory.
