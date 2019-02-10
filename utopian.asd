@@ -10,4 +10,3 @@
 (register-system-packages "lack-request" '(#:lack.request))
 (register-system-packages "lack-response" '(#:lack.response))
 (register-system-packages "mystic-file-mixin" '(#:mystic.template.file))
-(register-system-packages "mystic-gitignore-mixin" '(#:mystic.template.gitignore))

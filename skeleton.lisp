@@ -3,8 +3,6 @@
   (:import-from #:mystic.template.file
                 #:file
                 #:file-mixin)
-  (:import-from #:mystic.template.gitignore
-                #:gitignore-mixin)
   (:export #:standard-project))
 (in-package #:utopian/skeleton)
 
@@ -31,8 +29,7 @@
                       append (directory-project-files subdir)))))
       (directory-project-files base-directory))))
 
-(defclass standard-project (mystic.template.file:file-mixin
-                            mystic.template.gitignore:gitignore-mixin)
+(defclass standard-project (mystic.template.file:file-mixin)
   ()
   (:default-initargs
    :name "utopian-project"
