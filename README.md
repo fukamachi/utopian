@@ -67,7 +67,7 @@ mysql> CREATE USER blog@localhost IDENTIFIED BY '';
 #### Creating a database
 
 ```
-$ quicklisp/bin/utopian db:create
+$ quicklisp/bin/utopian db create
 ```
 
 ### Starting a development server
