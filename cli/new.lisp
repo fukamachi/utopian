@@ -10,7 +10,7 @@
 (in-package #:utopian/cli/new)
 
 (defun print-usage ()
-  (format *error-output* "~&Usage: utopian new [destination]~%"))
+  (format *error-output* "~&Usage: utopian new DESTINATION~%"))
 
 (defun main (&optional destination)
   (unless destination

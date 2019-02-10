@@ -24,6 +24,9 @@ COMMANDS:
 
     server
         Start a development web server.
+
+    db
+        Operation for databases.
 "
           (file-namestring *load-pathname*)))
 
@@ -36,6 +39,9 @@ COMMANDS:
         ((equal $1 "server")
          (ql:quickload '#:utopian/cli/server :silent t)
          (uiop:symbol-call :utopian/cli/server :main))
+        ((equal $1 "db")
+         (ql:quickload '#:utopian/cli/db :silent t)
+         (uiop:symbol-call :utopian/cli/db :main (first argv)))
         (t
          (print-usage)
          (uiop:quit -1)))
