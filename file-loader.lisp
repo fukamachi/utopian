@@ -10,10 +10,11 @@
   (let ((package (second (asdf/package-inferred-system::file-defpackage-form file))))
     (unless package
       (error "File '~A' is not a package inferred system." file))
-    #+quicklisp
-    (ql:quickload package)
-    #-quicklisp
-    (asdf:load-system package)
+    (handler-bind (#+asdf3.3 (asdf/operate:recursive-operate #'muffle-warning))
+      #+quicklisp
+      (ql:quickload package)
+      #-quicklisp
+      (asdf:load-system package))
     package))
 
 (defvar *file-cache*
@@ -36,10 +37,11 @@
 (defun %eval-file (file)
   (let ((dependencies (asdf/package-inferred-system::package-inferred-system-file-dependencies file)))
     (when dependencies
-      #+quicklisp
-      (ql:quickload dependencies :silent t)
-      #-quicklisp
-      (asdf:load-system dependencies)))
+      (handler-bind (#+asdf3.3 (asdf/operate:recursive-operate #'muffle-warning))
+        #+quicklisp
+        (ql:quickload dependencies :silent t)
+        #-quicklisp
+        (asdf:load-system dependencies))))
   (let ((*package* *package*)
         (*readtable* (copy-readtable))
         (*load-pathname* file)
