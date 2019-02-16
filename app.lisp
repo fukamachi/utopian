@@ -106,7 +106,8 @@
   (let* ((package-name (controller-package-name app controller-name))
          (controller (asdf:find-system package-name nil)))
     (when controller
-      (asdf:load-system controller)
+      (handler-bind (#+asdf3.3 (asdf/operate:recursive-operate #'muffle-warning))
+        (asdf:load-system controller))
       (find-package (string-upcase package-name)))))
 
 (defvar *app*)
