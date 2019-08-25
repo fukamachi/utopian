@@ -11,6 +11,7 @@ exec ros -Q -- $0 "$@"
   (:use #:cl)
   (:import-from #:utopian/errors
                 #:invalid-arguments
+                #:unknown-command
                 #:simple-task-error))
 (in-package #:ros.script.utopian.3758684578)
 
@@ -46,6 +47,9 @@ COMMANDS:
          (print-usage)
          (uiop:quit -1)))
     (invalid-arguments () (uiop:quit -1))
+    (unknown-command (e)
+      (format *error-output* "~&~A~%" e)
+      (uiop:quit -1))
     (simple-task-error (e)
       (format *error-output* "~&~A~%" e)
       (uiop:quit -1))))

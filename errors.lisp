@@ -4,6 +4,7 @@
            #:utopian-task-error
            #:simple-task-error
            #:invalid-arguments
+           #:unknown-command
            #:file-not-found
            #:system-not-found
            #:directory-already-exists))
@@ -16,6 +17,14 @@
 (define-condition simple-task-error (utopian-task-error simple-error) ())
 
 (define-condition invalid-arguments (utopian-task-error) ())
+
+(define-condition unknown-command (utopian-task-error)
+  ((given :initarg :given)
+   (candidates :initarg :candidates
+               :initform nil))
+  (:report (lambda (condition stream)
+             (with-slots (given candidates) condition
+               (format stream "~&Command not found: ~A~%~@[Must be one of [ ~{~A~^ | ~} ]~]" given candidates)))))
 
 (define-condition file-not-found (utopian-task-error)
   ((file :initarg file))

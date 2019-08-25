@@ -2,6 +2,7 @@
   (:use #:cl)
   (:import-from #:utopian/errors
                 #:invalid-arguments
+                #:unknown-command
                 #:file-not-found)
   (:import-from #:utopian/tasks/db)
   (:export #:main))
@@ -38,4 +39,8 @@ COMMANDS
       ((equal command "migrate")
        (utopian/tasks/db:migrate app-file))
       ((equal command "migrate:status")
-       (utopian/tasks/db:migration-status app-file)))))
+       (utopian/tasks/db:migration-status app-file))
+      (t
+       (error 'unknown-command
+              :given command
+              :candidates '("create" "recreate" "migrate" "migrate:status"))))))
