@@ -61,7 +61,8 @@
                        ,new-value)))))))))
 
 (defun new (destination &rest options &key project-name description author database license)
-  (let ((destination (uiop:ensure-directory-pathname destination)))
+  (let ((destination (uiop:ensure-absolute-pathname (uiop:ensure-directory-pathname destination)
+                                                    *default-pathname-defaults*)))
     (when (uiop:directory-exists-p destination)
       (error 'directory-already-exists
              :directory destination))
