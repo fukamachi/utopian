@@ -108,10 +108,20 @@
     (when models
       (labels ((directory-models (dir)
                  (append
-                  (uiop:directory-files dir "*.lisp")
-                  (mapcan #'directory-models (uiop:subdirectories dir)))))
-        (dolist (model-file (directory-models models))
-          (load-file model-file))))))
+                   (uiop:directory-files dir "*.lisp")
+                   (mapcan #'directory-models (uiop:subdirectories dir)))))
+        (let ((model-files (directory-models models)))
+          (when model-files
+            (let ((count (length model-files)))
+              (format t "~&Loading model files (0/~A)" count)
+              (loop for i from 0
+                    for model-file in model-files
+                    do (format t "~CLoading model files (~A/~A)"
+                               #\Return
+                               i
+                               count)
+                       (load-file model-file t))
+              (format t "~CLoading model files...Done    ~%" #\Return))))))))
 
 (defmethod to-app :before ((app application))
   (load-models app))

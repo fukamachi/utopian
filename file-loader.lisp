@@ -6,13 +6,13 @@
            #:intern-rule))
 (in-package #:utopian/file-loader)
 
-(defun load-file (file)
+(defun load-file (file &optional silent)
   (let ((package (second (asdf/package-inferred-system::file-defpackage-form file))))
     (unless package
       (error "File '~A' is not a package inferred system." file))
     (handler-bind (#+asdf3.3 (asdf/operate:recursive-operate #'muffle-warning))
       #+quicklisp
-      (ql:quickload package)
+      (ql:quickload package :silent silent)
       #-quicklisp
       (asdf:load-system package))
     package))
