@@ -4,6 +4,7 @@
   :author "Eitaro Fukamachi"
   :license "LLGPL"
   :description "Web application framework"
+  :pathname "src"
   :depends-on ("utopian/main"))
 
 (register-system-packages "lack-component" '(#:lack.component))
