@@ -90,7 +90,7 @@ $ quicklisp/bin/utopian db migrate
 
 ## Examples
 
-See [examples/](https://github.com/fukamachi/utopian/tree/next/example) directory.
+See [examples/](https://github.com/fukamachi/utopian/tree/next/examples) directory.
 
 ## See Also
 
