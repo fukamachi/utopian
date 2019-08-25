@@ -40,9 +40,7 @@ COMMANDS
        (utopian/tasks/db:migrate app-file))
       ((equal command "migrate:status")
        (utopian/tasks/db:migration-status app-file))
-      ((equal command "generate-migrations")
-       (utopian/tasks/db:generate-migrations app-file))
       (t
        (error 'unknown-command
               :given command
-              :candidates '("create" "recreate" "migrate" "migrate:status" "generate-migrations"))))))
+              :candidates '("create" "recreate" "migrate" "migrate:status"))))))

@@ -28,6 +28,9 @@ COMMANDS:
 
     db
         Operation for databases.
+
+    generate
+        Generate files.
 "
           (file-namestring *load-pathname*)))
 
@@ -43,6 +46,9 @@ COMMANDS:
         ((equal $1 "db")
          (ql:quickload '#:utopian/cli/db :silent t)
          (uiop:symbol-call :utopian/cli/db :main (first argv)))
+        ((equal $1 "generate")
+         (ql:quickload '#:utopian/cli/generate :silent t)
+         (apply #'uiop:symbol-call :utopian/cli/generate :main argv))
         (t
          (print-usage)
          (uiop:quit -1)))
