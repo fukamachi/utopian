@@ -62,6 +62,7 @@ $ createuser -d blog
 ```
 $ mysql -u root
 mysql> CREATE USER blog@localhost IDENTIFIED BY '';
+mysql> GRANT ALL ON *.* TO blog@localhost;
 ```
 
 #### Creating a database
@@ -76,6 +77,15 @@ $ quicklisp/bin/utopian db create
 $ quicklisp/bin/utopian server
 Hunchentoot server is going to start.
 Listening on localhost:5000.
+```
+
+## DB Migration
+
+Add Mito table classes under `models/` directory and run the following commands:
+
+```
+$ quicklisp/bin/utopian generate migration
+$ quicklisp/bin/utopian db migrate
 ```
 
 ## Examples
