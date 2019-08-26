@@ -14,9 +14,10 @@ install:
   - curl -L https://raw.githubusercontent.com/roswell/roswell/release/scripts/install-for-ci.sh | sh
   - ros install fukamachi/rove
   - if [ "$COVERAGE" = "1" ]; then ros install fukamachi/cl-coveralls; fi
+  - ros install fukamachi/lsx
 
 script:
-  - rove utopian.asd
+  - rove utopian-tests.asd
 
 after_script:
   - if [ "$COVERAGE" = "1" ]; then

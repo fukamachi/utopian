@@ -25,6 +25,7 @@ Utopian is a web application framework for encouraging rapid web development.
 
 ```
 $ ros install fukamachi/utopian
+$ ros install fukamachi/lsx
 $ ros install fukamachi/qlot
 ```
 
