@@ -5,7 +5,8 @@
   :license "LLGPL"
   :description "Web application framework"
   :pathname "src"
-  :depends-on ("utopian/main"))
+  :depends-on ("utopian/main")
+  :in-order-to ((test-op (test-op "utopian-tests"))))
 
 (register-system-packages "lack-component" '(#:lack.component))
 (register-system-packages "lack-request" '(#:lack.request))
