@@ -1,0 +1,22 @@
+("quicklisp" .
+ (:class qlot.source.ql:source-ql-all
+  :initargs (:distribution "http://beta.quicklisp.org/dist/quicklisp.txt" :%version :latest)
+  :version "2019-08-13"))
+("utopian" .
+ (:class qlot.source.git:source-git
+  :initargs (:project-name "utopian" :remote-url "https://github.com/fukamachi/utopian" :branch "next")
+  :version "git-bb02873a2d8627eccfb16e0bda63b1cf047f50f9"
+  :remote-url "https://github.com/fukamachi/utopian"
+  :ref "bb02873a2d8627eccfb16e0bda63b1cf047f50f9"))
+("mito" .
+ (:class qlot.source.git:source-git
+  :initargs (:project-name "mito" :remote-url "https://github.com/fukamachi/mito")
+  :version "git-5e5a32f7a9a63c543e5ff97324c19ca01cde7efc"
+  :remote-url "https://github.com/fukamachi/mito"
+  :ref "5e5a32f7a9a63c543e5ff97324c19ca01cde7efc"))
+("lsx" .
+ (:class qlot.source.git:source-git
+  :initargs (:project-name "lsx" :remote-url "https://github.com/fukamachi/lsx")
+  :version "git-95d2adf43af6326c65df3612bb8067af7d008880"
+  :remote-url "https://github.com/fukamachi/lsx"
+  :ref "95d2adf43af6326c65df3612bb8067af7d008880"))
