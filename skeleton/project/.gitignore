@@ -9,6 +9,7 @@
 .#*
 
 quicklisp/
+.qlot/
 bundle-libs/
 
 db/*.db
