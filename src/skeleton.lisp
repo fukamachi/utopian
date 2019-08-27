@@ -14,7 +14,7 @@
 
 (defun skeleton-file (file)
   (asdf:system-relative-pathname :utopian
-                                 (merge-pathnames file #P"src/skeleton/")))
+                                 (merge-pathnames file #P"skeleton/")))
 
 (defun make-relative-pathname (path base-directory)
   (make-pathname
@@ -24,7 +24,7 @@
                     (nthcdr (length (pathname-directory base-directory)) (pathname-directory path)))))
 
 (defun project-files ()
-  (let ((base-directory (asdf:system-relative-pathname :utopian #P"src/skeleton/project/")))
+  (let ((base-directory (asdf:system-relative-pathname :utopian #P"skeleton/project/")))
     (labels ((directory-project-files (dir)
                (append
                 (loop for file in (uiop:directory-files dir)
