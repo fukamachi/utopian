@@ -6,7 +6,7 @@
            {{/last}}{{/actions}}))
 (in-package #:{{project-name}}/views/{{controller}})
 
-(lsx:enable-lsx-syntax)
+(named-readtables:in-readtable :lsx-syntax)
 {{#actions}}
 
 (defview {{name}}-page ()

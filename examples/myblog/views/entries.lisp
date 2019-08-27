@@ -7,7 +7,7 @@
            #:show-page))
 (in-package #:myblog/views/entries)
 
-(lsx:enable-lsx-syntax)
+(named-readtables:in-readtable :lsx-syntax)
 
 (defview listing-page ()
   (entries)

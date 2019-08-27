@@ -5,7 +5,7 @@
   (:export #:index-page))
 (in-package #:myblog/views/root)
 
-(lsx:enable-lsx-syntax)
+(named-readtables:in-readtable :lsx-syntax)
 
 (defview index-page ()
   ()
