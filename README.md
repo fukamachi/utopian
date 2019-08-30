@@ -48,7 +48,7 @@ $ qlot install
 
 ### Creating a database
 
-This section is needed only when using with MySQL or PostgreSQL.
+This section is needed only when using MySQL or PostgreSQL.
 
 #### Creating a database user
 
