@@ -11,7 +11,7 @@
 2. Choose the right web framework.
 3. Write less.
 
-Utopian is a web application framework for encouraging rapid web development.
+Utopian is a web application framework that encourages rapid web development.
 
 ## Requirements
 
