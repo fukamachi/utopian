@@ -1,4 +1,4 @@
-(defpackage #:{{project-name}}/config/application
+(defpackage #:myblog/config/application
   (:use #:cl
         #:utopian)
   (:import-from #:lack.component
@@ -7,21 +7,21 @@
   (:import-from #:lack
                 #:builder)
   (:import-from #:cl-ppcre)
-  (:export #:{{project-name}}-app))
-(in-package #:{{project-name}}/config/application)
+  (:export #:blog-app))
+(in-package #:myblog/config/application)
 
-(defapp {{project-name}}-app ()
+(defapp blog-app ()
   ()
   (:config #P"environments/"))
 
-(defmethod to-app ((app {{project-name}}-app))
+(defmethod to-app ((app blog-app))
   (builder
    (:static
     :path (lambda (path)
             (if (ppcre:scan "^(?:/assets/|/robot\\.txt$|/favicon\\.ico$)" path)
                 path
                 nil))
-    :root (asdf:system-relative-pathname :{{project-name}} #P"public/"))
+    :root (asdf:system-relative-pathname :myblog #P"public/"))
    :accesslog
    (:mito (db-settings :maindb))
    :session

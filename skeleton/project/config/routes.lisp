@@ -1,14 +1,10 @@
-(defpackage #:<% @var name %>/config/routes
+(defpackage #:{{project-name}}/config/routes
   (:use #:cl
-        #:utopian
-        #:<% @var name %>/config/application)
-  (:export #:*app*))
-(in-package #:<% @var name %>/config/routes)
+        #:utopian)
+  (:export #:*routes*))
+(in-package #:{{project-name}}/config/routes)
 
-(defvar *app* (make-instance 'application))
-(clear-routing-rules *app*)
-
-;;
-;; Routing rules
+(defroutes *routes* ()
+  (:controllers #P"../controllers/"))
 
 (route :GET "/" "root:index")

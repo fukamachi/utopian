@@ -1,0 +1,25 @@
+language: common-lisp
+sudo: false
+
+env:
+  global:
+    - PATH=~/.roswell/bin:$PATH
+    - ROSWELL_INSTALL_DIR=$HOME/.roswell
+    - COVERAGE_EXCLUDE=tests
+  matrix:
+    - LISP=sbcl-bin COVERAGE=1
+
+install:
+  # Roswell
+  - curl -L https://raw.githubusercontent.com/roswell/roswell/release/scripts/install-for-ci.sh | sh
+  - ros install fukamachi/rove
+  - if [ "$COVERAGE" = "1" ]; then ros install fukamachi/cl-coveralls; fi
+  - ros install fukamachi/lsx
+
+script:
+  - rove utopian-tests.asd
+
+after_script:
+  - if [ "$COVERAGE" = "1" ]; then
+      coveralls report/;
+    fi

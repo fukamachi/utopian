@@ -1,27 +1,9 @@
-(push (uiop:pathname-directory-pathname *load-pathname*)
-      asdf:*central-registry*)
-(ql:quickload :<% @var name %> :silent t)
-
-(defpackage #:<% @var name %>/app
+(defpackage #:{{project-name}}/app
   (:use #:cl
-        #:<% @var name %>
-        #:utopian)
-  (:import-from #:lack
-                #:builder)
-  (:import-from #:mito))
-(in-package #:<% @var name %>/app)
+        #:{{project-name}}/config/routes
+        #:{{project-name}}/config/application))
+(in-package #:{{project-name}}/app)
 
-(apply #'mito:connect-toplevel (connection-settings :maindb))
-
-(builder
- (:static
-  :path "/public/"
-  :root (project-path #P"public/"))
- :accesslog
- (unless (productionp)
-   :clack-errors)
- (when (config :error-log)
-   `(:backtrace :output ,(config :error-log)))
- :session
- :csrf
- *app*)
+(make-instance '{{project-name}}-app
+               :routes *routes*
+               :models #P"models/")
