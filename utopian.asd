@@ -1,6 +1,6 @@
 (defsystem "utopian"
   :class :package-inferred-system
-  :version "0.1.0"
+  :version "0.9.0"
   :author "Eitaro Fukamachi"
   :license "LLGPL"
   :description "Web application framework"
