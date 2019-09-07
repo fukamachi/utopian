@@ -46,7 +46,7 @@ $ cd blog/
 $ qlot install
 ```
 
-### Creating a database
+### Database Settings
 
 This section is needed only when using MySQL or PostgreSQL.
 
@@ -69,13 +69,13 @@ mysql> GRANT ALL ON *.* TO blog@localhost;
 #### Creating a database
 
 ```
-$ quicklisp/bin/utopian db create
+$ .qlot/bin/utopian db create
 ```
 
 ### Starting a development server
 
 ```
-$ quicklisp/bin/utopian server
+$ .qlot/bin/utopian server
 Hunchentoot server is going to start.
 Listening on localhost:5000.
 ```
@@ -85,8 +85,8 @@ Listening on localhost:5000.
 Add Mito table classes under `models/` directory and run the following commands:
 
 ```
-$ quicklisp/bin/utopian generate migration
-$ quicklisp/bin/utopian db migrate
+$ .qlot/bin/utopian generate migration
+$ .qlot/bin/utopian db migrate
 ```
 
 ## Examples
