@@ -7,14 +7,23 @@
 (in-package #:utopian/file-loader)
 
 (defun load-file (file &optional silent)
-  (let ((package (second (asdf/package-inferred-system::file-defpackage-form file))))
+  (let ((package (second (asdf/package-inferred-system::file-defpackage-form file)))
+        (retrying (make-hash-table :test 'equal)))
     (unless package
       (error "File '~A' is not a package inferred system." file))
-    (handler-bind (#+asdf3.3 (asdf/operate:recursive-operate #'muffle-warning))
-      #+quicklisp
-      (ql:quickload package :silent silent)
-      #-quicklisp
-      (asdf:load-system package))
+    (handler-bind (#+asdf3.3 (asdf/operate:recursive-operate #'muffle-warning)
+                   (asdf:missing-component
+                     (lambda (e)
+                       (unless (gethash (asdf::missing-requires e) retrying)
+                         (setf (gethash (asdf::missing-requires e) retrying) t)
+                         (when (find :quicklisp *features*)
+                           (uiop:symbol-call '#:ql-dist '#:ensure-installed
+                                             (uiop:symbol-call '#:ql-dist '#:find-system
+                                                               (asdf::missing-requires e)))
+                           (invoke-restart (find-restart 'asdf:clear-configuration-and-retry e)))))))
+      (if (find :quicklisp *features*)
+          (uiop:symbol-call '#:ql '#:quickload package :silent silent)
+          (asdf:load-system package)))
     package))
 
 (defvar *file-cache*
