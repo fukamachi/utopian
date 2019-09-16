@@ -10,8 +10,10 @@
 (defun print-usage ()
   (format t "~&Usage: utopian server~%"))
 
-(defun main ()
-  (let ((app-file (merge-pathnames #P"app.lisp" *default-pathname-defaults*)))
+(defun main (&optional app-file)
+  (let ((app-file (if app-file
+                      (merge-pathnames app-file)
+                      (merge-pathnames #P"app.lisp" *default-pathname-defaults*))))
     (unless (uiop:file-exists-p app-file)
       (error 'simple-task-error
              :format-control "'app.lisp' file not found."))
