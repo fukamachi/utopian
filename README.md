@@ -69,13 +69,13 @@ mysql> GRANT ALL ON *.* TO blog@localhost;
 #### Creating a database
 
 ```
-$ .qlot/bin/utopian db create
+$ ./quicklisp/bin/utopian db create
 ```
 
 ### Starting a development server
 
 ```
-$ .qlot/bin/utopian server
+$ ./quicklisp/bin/utopian server
 Hunchentoot server is going to start.
 Listening on localhost:5000.
 ```
@@ -85,8 +85,8 @@ Listening on localhost:5000.
 Add Mito table classes under `models/` directory and run the following commands:
 
 ```
-$ .qlot/bin/utopian generate migration
-$ .qlot/bin/utopian db migrate
+$ ./quicklisp/bin/utopian generate migration
+$ ./quicklisp/bin/utopian db migrate
 ```
 
 ## Examples
@@ -106,7 +106,7 @@ Eitaro Fukamachi (e.arrows@gmail.com)
 
 ## Copyright
 
-Copyright (c) 2016-2018 Eitaro Fukamachi
+Copyright (c) 2016-2019 Eitaro Fukamachi
 
 ## License
 
