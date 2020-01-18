@@ -34,7 +34,9 @@
   (etypecase rule
     ((or function symbol) (make-controller rule))
     (string
-     (make-controller (symbol-function (intern-rule rule *controllers-directory*))))))
+     (let ((action (intern-rule rule *controllers-directory*)))
+       (assert (symbolp action))
+       (make-controller action)))))
 
 (defvar *package-routes* (make-hash-table :test 'eq))
 
