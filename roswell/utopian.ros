@@ -42,7 +42,7 @@ COMMANDS:
          (uiop:symbol-call :utopian/cli/new :main (first argv)))
         ((equal $1 "server")
          (ql:quickload '#:utopian/cli/server :silent t)
-         (uiop:symbol-call :utopian/cli/server :main))
+         (uiop:symbol-call :utopian/cli/server :main argv))
         ((equal $1 "db")
          (ql:quickload '#:utopian/cli/db :silent t)
          (uiop:symbol-call :utopian/cli/db :main (first argv)))
