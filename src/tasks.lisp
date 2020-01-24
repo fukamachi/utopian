@@ -31,8 +31,12 @@
   (apply #'clack:clackup app-file :use-thread nil
          args))
 
-(defun read-new-value (name &optional default)
-  (format t "~A~@[ [~A]~]: " name (if (equal default "") nil default))
+(defun read-new-value (name &optional default choices)
+  (format t "~A~@[ [~A]~]~@[ one of ~{~A~^, ~} or ~A~]: "
+          name
+          (if (equal default "") nil default)
+          (butlast choices)
+          (car (last choices)))
   (force-output)
   (list (read-line)))
 
@@ -42,21 +46,23 @@
              (format stream "'~A' is missing."
                      (slot-value condition 'name)))))
 
-(defmacro check-and-ask-for (value name &optional default)
+(defmacro check-and-ask-for (value name &optional default choices)
   (let ((g-value (gensym "VALUE"))
         (g-name (gensym "NAME"))
         (g-default (gensym "DEFAULT"))
+        (g-choices (gensym "CHOICES"))
         (new-value (gensym "NEW-VALUE")))
     `(let ((,g-value ,value)
            (,g-name ,name)
-           (,g-default ,default))
+           (,g-default ,default)
+           (,g-choices ,choices))
        (or ,g-value
            (block nil
              (restart-case
                  (error 'ask-for-value :name ,g-name)
                (use-value (,new-value)
                  :report ,(format nil "Use a value for '~A' (Default: ~S)" name default)
-                 :interactive (lambda () (read-new-value ,g-name ,g-default))
+                 :interactive (lambda () (read-new-value ,g-name ,g-default ,g-choices))
                  (return
                    (if (string= ,new-value "")
                        ,g-default
@@ -82,7 +88,7 @@
       (setf (getf options :author)
             (check-and-ask-for author "Author" ""))
       (setf (getf options :database)
-            (check-and-ask-for database "Database" "sqlite3"))
+            (check-and-ask-for database "Database" "sqlite3" '("sqlite3" "postgres" "mysql")))
       (setf (getf options :license)
             (check-and-ask-for license "License" ""))
       (mystic:render (make-instance 'standard-project)
