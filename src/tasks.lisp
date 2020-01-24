@@ -32,13 +32,19 @@
          args))
 
 (defun read-new-value (name &optional default choices)
-  (format t "~A~@[ [~A]~]~@[ one of ~{~A~^, ~} or ~A~]: "
-          name
-          (if (equal default "") nil default)
-          (butlast choices)
-          (car (last choices)))
-  (force-output)
-  (list (read-line)))
+  (assert (or (null choices) (< 1 (length choices))))
+  (loop
+    (format t "~A~@[ [~A]~]~@[ one of ~{~A~^, ~} or ~A~]: "
+            name
+            (if (equal default "") nil default)
+            (butlast choices)
+            (car (last choices)))
+    (force-output)
+    (let ((line (read-line)))
+      (when (or (null choices)
+                (member line choices :test #'string=)
+                default)
+        (return (list line))))))
 
 (define-condition ask-for-value ()
   ((name :initarg :name))
