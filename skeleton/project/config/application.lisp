@@ -12,7 +12,8 @@
 
 (defapp {{project-name}}-app ()
   ()
-  (:config #P"environments/"))
+  (:config #P"environments/")
+  (:content-type "text/html; charset=utf-8"))
 
 (defmethod to-app ((app {{project-name}}-app))
   (builder

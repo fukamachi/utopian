@@ -138,9 +138,13 @@
 
 (defgeneric make-response (app &optional status headers body)
   (:method (app &optional status headers body)
-    (lack.response:make-response status
-                                 (append *default-headers* headers)
-                                 body)))
+    (let ((default-content-type (first (slot-value (class-of app) 'content-type))))
+      (lack.response:make-response status
+                                   (append *default-headers*
+                                           (and default-content-type
+                                                (list :content-type default-content-type))
+                                           headers)
+                                   body))))
 
 (defgeneric on-exception (app exception)
   (:method ((app application) (exception http-exception))
@@ -154,7 +158,9 @@
   ((base-directory :initarg :base-directory
                    :initform *default-pathname-defaults*)
    (config :initarg :config
-           :initform nil)))
+           :initform nil)
+   (content-type :initarg :content-type
+                 :initform '("text/html; charset=utf-8"))))
 
 (defmethod initialize-instance :after ((class utopian-app-class) &rest initargs &key config &allow-other-keys)
   (declare (ignore initargs))
