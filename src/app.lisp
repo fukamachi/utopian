@@ -35,6 +35,7 @@
   (:import-from #:closer-mop)
   (:export #:application
            #:defapp
+           #:with-config
            #:make-request
            #:make-response
            #:on-exception
