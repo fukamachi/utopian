@@ -11,6 +11,7 @@
 
 (defview listing-page ()
   (entries)
+  (:metaclass html-view-class)
   (:render
    <html>
      <head>
@@ -32,6 +33,7 @@
 
 (defview show-page ()
   (entry)
+  (:metaclass html-view-class)
   (:render
    <html>
      <head>

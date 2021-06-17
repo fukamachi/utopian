@@ -11,6 +11,7 @@
 
 (defview {{name}}-page ()
   ()
+  (:metaclass html-view-class)
   (:render
    <html>
      <head>

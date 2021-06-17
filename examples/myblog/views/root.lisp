@@ -9,6 +9,7 @@
 
 (defview index-page ()
   ()
+  (:metaclass html-view-class)
   (:render
    <html>
      <head>
