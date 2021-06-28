@@ -2,10 +2,14 @@
   (:use #:cl)
   (:import-from #:utopian/file-loader
                 #:eval-file)
+  (:import-from #:alexandria
+                #:when-let)
   (:export #:*config-dir*
            #:environment-config
            #:config
            #:db-settings
+           #:getenv
+           #:getenv-int
            #:appenv))
 (in-package #:utopian/config)
 
@@ -29,12 +33,19 @@
 (defun db-settings (&optional (db :maindb))
   (cdr (assoc db (config :databases))))
 
+(defun getenv (var)
+  (uiop:getenvp var))
+
+(defun (setf getenv) (new-value var)
+  (setf (uiop:getenv var) new-value))
+
+(defun getenv-int (var)
+  (when-let (value (getenv var))
+    (assert (every #'digit-char-p value))
+    (parse-integer value)))
+
 (defun appenv ()
-  (let ((appenv (uiop:getenv "APP_ENV")))
-    (if (and (stringp appenv)
-             (not (string= appenv "")))
-        appenv
-        *default-app-env*)))
+  (or (getenv "APP_ENV") *default-app-env*))
 
 (defun (setf appenv) (env)
   (setf (uiop:getenv "APP_ENV") env))
