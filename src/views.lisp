@@ -5,9 +5,12 @@
                 #:response-headers)
   (:import-from #:lsx)
   (:import-from #:closer-mop)
+  (:import-from #:alexandria
+                #:ensure-car)
   (:export #:defview
            #:utopian-view
            #:utopian-view-class
+           #:utopian-view-direct-superclasses
            #:render
            #:render-object
            #:html-view
@@ -20,8 +23,6 @@
 
 (defclass utopian-view-class (standard-class)
   ((content-type :initarg :content-type)
-   (inherits :initarg :inherits
-             :initform '(utopian-view))
    (render :initarg :render
            :initform nil)
    (render-element :initarg :render-element
@@ -29,6 +30,10 @@
 
 (defclass utopian-view-slot-class (c2mop:standard-direct-slot-definition)
   ())
+
+(defgeneric utopian-view-direct-superclasses (class)
+  (:method ((class utopian-view-class))
+    '(utopian-view)))
 
 (defgeneric render-object (object stream)
   (:method :before ((object utopian-view) stream)
@@ -48,7 +53,7 @@
 
 (defun view-content-type (view-class)
   (if (slot-boundp view-class 'content-type)
-      (slot-value view-class 'content-type)
+      (ensure-car (slot-value view-class 'content-type))
       *default-content-type*))
 
 (defmacro define-initialize-instance (lambda-list &body body)
@@ -63,11 +68,11 @@
   (apply #'call-next-method class args))
 
 (define-initialize-instance ((class utopian-view-class) &rest initargs
-                                                        &key direct-superclasses inherits &allow-other-keys)
+                                                        &key direct-superclasses &allow-other-keys)
   (apply #'call-next-method class
-         :direct-superclasses (append direct-superclasses (mapcar #'find-class (if (slot-boundp class 'inherits)
-                                                                                   (slot-value class 'inherits)
-                                                                                   inherits)))
+         :direct-superclasses (append direct-superclasses
+                                      (mapcar #'find-class
+                                              (utopian-view-direct-superclasses class)))
          initargs))
 
 (define-initialize-instance :after ((class utopian-view-class) &rest initargs &key direct-slots render &allow-other-keys)
@@ -109,8 +114,10 @@
                 :initform '(t)))
   (:default-initargs
    :content-type "text/html"
-   :inherits '(html-view)
    :render-element #'lsx:render-object))
+
+(defmethod utopian-view-direct-superclasses ((class html-view-class))
+  '(html-view))
 
 (defmacro defview (name superclasses slots &rest options)
   (pushnew '(:metaclass utopian-view-class) options
