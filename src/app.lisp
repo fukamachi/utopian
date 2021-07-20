@@ -33,6 +33,8 @@
   (:import-from #:safety-params
                 #:validation-error)
   (:import-from #:closer-mop)
+  (:import-from #:alexandria
+                #:hash-table-plist)
   (:export #:application
            #:defapp
            #:with-config
@@ -139,13 +141,27 @@
 
 (defgeneric make-response (app &optional status headers body)
   (:method (app &optional status headers body)
-    (let ((default-content-type (first (slot-value (class-of app) 'content-type))))
-      (lack.response:make-response status
-                                   (append *default-headers*
-                                           (and default-content-type
-                                                (list :content-type default-content-type))
-                                           headers)
-                                   body))))
+    (let* ((app-class (class-of app))
+           (default-content-type (first (slot-value app-class 'content-type)))
+           (additional-headers (slot-value app-class 'additional-headers))
+           (headers
+             (append *default-headers*
+                     (and default-content-type
+                          (list :content-type default-content-type))
+                     additional-headers
+                     headers))
+           (headers
+             (loop with headers-map = (make-hash-table :test 'equal)
+                   for (k v) on headers by #'cddr
+                   if v
+                   do (setf (gethash k headers-map)
+                            (if (gethash k headers-map)
+                                (format nil "~A, ~A" (gethash k headers-map) v)
+                                v))
+                   else
+                   do (remhash k headers-map)
+                   finally (return (hash-table-plist headers-map)))))
+      (lack.response:make-response status headers body))))
 
 (defgeneric on-exception (app exception)
   (:method ((app application) (exception http-exception))
@@ -161,7 +177,9 @@
    (config :initarg :config
            :initform nil)
    (content-type :initarg :content-type
-                 :initform '("text/html; charset=utf-8"))))
+                 :initform '("text/html; charset=utf-8"))
+   (additional-headers :initarg :additional-headers
+                       :initform '())))
 
 (defmethod initialize-instance :after ((class utopian-app-class) &rest initargs &key config &allow-other-keys)
   (declare (ignore initargs))
