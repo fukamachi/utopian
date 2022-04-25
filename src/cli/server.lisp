@@ -40,6 +40,12 @@ OPTIONS
     (when args
       (invalid-arguments (format nil "~&Extra arguments: ~{'~A'~^, ~}~%" args)))
 
+    (when (assoc :port options)
+      (let ((port-number (parse-integer (cdr (assoc :port options)) :junk-allowed t)))
+        (if (and port-number (> port-number 0))
+            (setf (cdr (assoc :port options)) port-number)
+            (invalid-arguments (format nil "~&Port number must be positive number.~%" args)))))
+
     (let ((app-file (merge-pathnames #P"app.lisp" *default-pathname-defaults*)))
       (unless (uiop:file-exists-p app-file)
         (error 'simple-task-error
