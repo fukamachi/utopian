@@ -41,25 +41,31 @@
    :name "utopian-project"
    :options
    (list
+    ;; NOTE: :docstring option is required with the latest mystic
     (make-instance 'mystic:prompt-option
                    :name :project-name
                    :title "Project Name"
-                   :requiredp t)
+                   :requiredp t
+                   :docstring nil)
     (make-instance 'mystic:prompt-option
                    :name :description
                    :title "Description"
-                   :default "")
+                   :default ""
+                   :docstring nil)
     (make-instance 'mystic:prompt-option
                    :name :license
                    :title "License"
-                   :default "")
+                   :default ""
+                   :docstring nil)
     (make-instance 'mystic:prompt-option
                    :name :author
-                   :title "Author")
+                   :title "Author"
+                   :docstring nil)
     (make-instance 'mystic:prompt-option
                    :name :database
                    :title "Database"
-                   :default "sqlite3"))
+                   :default "sqlite3"
+                   :docstring nil))
    :files (project-files)))
 
 (defun normalize-database (value)
