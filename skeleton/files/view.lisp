@@ -1,12 +1,13 @@
 (defpackage #:{{project-name}}/views/{{controller}}
   (:use #:cl
-        #:lsx
         #:utopian)
+  (:import-from #:lsx
+                #:enable-lsx-syntax)
   (:export {{#actions}}#:{{name}}-page{{^last}}
            {{/last}}{{/actions}}))
 (in-package #:{{project-name}}/views/{{controller}})
 
-(named-readtables:in-readtable :lsx-syntax)
+(enable-lsx-syntax)
 {{#actions}}
 
 (defview {{name}}-page ()
