@@ -11,8 +11,7 @@
            #:use-value))
 (in-package #:utopian/tasks)
 
-(defun server (app-file &rest args &key address port)
-  (declare (ignore address port))
+(defun server (app-file &key address port)
   (check-type app-file pathname)
   (unless (probe-file app-file)
     (error 'file-not-found :file app-file))
@@ -28,8 +27,9 @@
         #-quicklisp
         (asdf:missing-component (e)
           (error 'system-not-found :system (asdf/find-component:missing-requires e))))))
-  (apply #'clack:clackup app-file :use-thread nil
-         args))
+  (clack:clackup app-file :use-thread nil
+                 :port (if (stringp port) (parse-integer port) port)
+                 :address address))
 
 (defun read-new-value (name &optional default)
   (format t "~A~@[ [~A]~]: " name (if (equal default "") nil default))
